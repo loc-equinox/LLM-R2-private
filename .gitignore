@@ -1,1 +1,4 @@
 .venv/
+src/SentEval/senteval/__pycache__/
+src/SentEval/senteval/tools/__pycache__/
+src/__pycache__/
