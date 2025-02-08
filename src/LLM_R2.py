@@ -700,6 +700,6 @@ def LLM_R2(dataset, method, num_promos):
 # promo_pool_pos = get_pool('pos_pool_job_syn.csv', method)
 # promo_pool_neg = get_pool('neg_pool_job_syn.csv', method)
 method = 'random'
-dataset = 'tpch'
+dataset = 'job_syn'
 num_promos = 1
 LLM_R2(dataset, method, num_promos)
