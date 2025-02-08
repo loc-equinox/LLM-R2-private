@@ -28,23 +28,23 @@ from openai import OpenAI
 # import tiktoken
 client = OpenAI(
     # This is the default and can be omitted
-    api_key="your_openai_api_key"
+    api_key=os.environ.get("ARK_API_KEY"),
+    base_url="https://ark.cn-beijing.volces.com/api/v3",
 )
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-model = QueryformerForCL()
-model_name = 'tpch'
-checkpoint = torch.load('simcse_models/' + model_name + '/pytorch_model.bin', map_location=torch.device('cpu'))
-model.load_state_dict(checkpoint, strict=False)
-print("ok!")
-model.eval()
-print("ok!")
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print("ok!")
-model = model.to(device)
-print("ok!")
-
+# model = QueryformerForCL()
+# model_name = 'tpch'
+# checkpoint = torch.load('simcse_models/' + model_name + '/pytorch_model.bin', map_location=torch.device('cpu'))
+# model.load_state_dict(checkpoint, strict=False)
+# print("ok!")
+# model.eval()
+# print("ok!")
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# print("ok!")
+# model = model.to(device)
+# print("ok!")
 
 def batcher(sentences, db_ids):
     # sentences = [[' '.join(s).replace('"', '')] for s in batch]
@@ -76,12 +76,13 @@ def query_gpt_attempts(prompt, trys):
 
 
 def query_turbo_model(prompt):
+    # print(prompt)
     chat_completion = client.chat.completions.create(
+        model="ep-20250208072708-5r255",
         messages=prompt,
-        model="gpt-3.5-turbo",
         temperature=0,
     )
-    # print(chat_completion)
+    print(chat_completion.choices[0].message.content)
     return chat_completion.choices[0].message.content
     # completion = openai.ChatCompletion.create(
     #     model="gpt-4-1106-preview",
@@ -660,7 +661,7 @@ def LLM_R2(dataset, method, num_promos):
                 # print(rewrite_query)
                 print(gpt_rules_s)
 
-            if index % 500 == 0 and index > 0:
+            if index % 10 == 0 and index > 0:
                 print(index)
                 df_i['db_id'] = db_ids
                 df_i['original_sql'] = original_queries
@@ -698,7 +699,7 @@ def LLM_R2(dataset, method, num_promos):
 # method = 'plan'
 # promo_pool_pos = get_pool('pos_pool_job_syn.csv', method)
 # promo_pool_neg = get_pool('neg_pool_job_syn.csv', method)
-method = 'queryCL'
-dataset = 'dsb'
+method = 'random'
+dataset = 'tpch'
 num_promos = 1
 LLM_R2(dataset, method, num_promos)
