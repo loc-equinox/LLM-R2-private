@@ -45,7 +45,6 @@ def call_rewriter(db_id, sql_input, rule_input):
 
         # Provide a list of strings as input
         input_list = [db_id, sql_input, current_rules]
-        print(current_rules)
 
         # Convert the input list to a JSON string
         input_string = json.dumps(input_list)

@@ -1,15 +1,5 @@
-import random
-import pandas as pd
-import re
-# import openai
-import zss
 import ast
-import time
 from rewriter import *
-from get_query_meta import *
-from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer
-import sys
 
 import csv
 

@@ -661,7 +661,7 @@ def LLM_R2(dataset, method, num_promos):
                 # print(rewrite_query)
                 print(gpt_rules_s)
 
-            if index % 10 == 0 and index > 0:
+            if index % 500 == 0 and index > 0:
                 print(index)
                 df_i['db_id'] = db_ids
                 df_i['original_sql'] = original_queries
