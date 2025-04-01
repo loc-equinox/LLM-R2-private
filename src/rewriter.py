@@ -39,6 +39,8 @@ def call_rewriter(db_id, sql_input, rule_input):
     final_outputs = []
 
     # 逐步应用规则
+    if len(rule_input) > 20:
+        return ""
     for i in range(len(rule_input)):
         # 构建当前规则子集
         current_rules = rule_input[:i + 1]
