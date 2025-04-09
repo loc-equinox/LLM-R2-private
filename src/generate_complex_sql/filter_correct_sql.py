@@ -1,6 +1,6 @@
+import time
 import pandas as pd
 import psycopg2
-import time
 
 DB_CONFIG = {
     "dbname": "tpch10g",
@@ -21,6 +21,7 @@ df = pd.read_csv(input_csv_path)
 if 'original_sql' not in df.columns:
     raise ValueError("CSV 文件中找不到 'original_sql' 列")
 
+
 def execute_sql(sql_query):
     """
     在 PostgreSQL 中执行 SQL 语句：
@@ -35,7 +36,7 @@ def execute_sql(sql_query):
 
         start_time = time.time()
         cursor.execute(sql_query)  # 执行查询
-        
+
         # 获取查询结果
         result = cursor.fetchone()
         elapsed_time = time.time() - start_time
@@ -58,6 +59,7 @@ def execute_sql(sql_query):
     except Exception as e:
         print(f"SQL 执行错误: {e}")
         return False
+
 
 # 读取 SQL 并验证
 valid_queries = []

@@ -52,9 +52,9 @@ Rewritten Complex Subquery:
 
 
 if __name__ == "__main__":
-    file_path = "/home/wangyiyan/LLM-R2/src/generate_complex_sql/deepest_subqueries.csv"   #处理后的原始查询+最深子查询
+    file_path = "./deepest_subqueries.csv"   # 处理后的原始查询+最深子查询
     output_path = "./complex_deepest_subqueries.csv"
-    
+
     df = pd.read_csv(file_path)
 
     # 创建 CSV 文件并写入表头
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     for index, row in df.iterrows():
         subquery = row["deepest_subquery"]
         original_sql = row["original_sql"]
-        complex_where = generate_complex_sql(subquery,original_sql)
+        complex_where = generate_complex_sql(subquery, original_sql)
 
         # 打印输出
         print("original subquery:", subquery)
