@@ -1,13 +1,17 @@
 # Generate complex sql query
 思路：使用llm生成sql中部分内容使之复杂化，后拼接
+
+This directory is placed inside LLM-R2/src
+
 Currently there are two ways to make the query more
 complicated. 1) Make the deepest subquery even deeper,
 and 2) Make the WHERE clause more complicated.
 
 ## Method 1 pipeline:
 
+
 get_deepest_subquery.py:
-	reads from: ./filtered_where_condition_sql.csv
+	reads from: ../../data/data_llmr2/queries/queries_tpch_test.csv
 	writes to: ./deepest_subqueries.csv
 
 connect_gpt_subquery.py: 
@@ -17,12 +21,12 @@ connect_gpt_subquery.py:
 
 replace_deepest_subquery.py:
 	reads from: ./complex_deepest_subqueries.csv
-	writes to: ./complex_sql_deep_subqueries.csv
+	writes to: ./complex_deep_queries.csv
 
 ## Method 2 pipeline:
 
 connect_gpt-where-parallel.py:
-	reads from: ../LLM-R2/data/data_llmr2/queries/queries_tpch_test.csv (could be modified)
+	reads from: ../../data/data_llmr2/queries/queries_tpch_test.csv (could be modified)
 	writes to: ./where_parallel_condition.csv
 	connects to LLM API
 
@@ -32,8 +36,9 @@ replace_where_condition.py:
 
 Both pipeline ends with:
 filter_correct_sql.py:
-	reads from: ./input_file.csv
-	writes to: ./output_file.csv
+	method 1:
+	reads from: ./complex_deep_queries.csv
+	writes to: ./correct_deep_queries.csv
 	connects to database
 
 

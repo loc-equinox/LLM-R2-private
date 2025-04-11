@@ -26,7 +26,7 @@ def extract_deepest_subquery(original_sql: str) -> str:
 
 
 # 读取CSV文件
-df = pd.read_csv("./filtered_where_condition_sql.csv")
+df = pd.read_csv("../../data/data_llmr2/queries/queries_tpch_test.csv")
 
 # 处理每一行数据，提取最内层子查询
 def process_row(row):

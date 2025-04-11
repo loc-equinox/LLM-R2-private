@@ -3,16 +3,16 @@ import pandas as pd
 import psycopg2
 
 DB_CONFIG = {
-    "dbname": "tpch10g",
-    "user": "postgres",
-    "password": "postgres",
+    "dbname": "tpch",
+    "user": "leshanchen",
+    "password": "",
     "host": "localhost",
     "port": "5432"
 }
 
 # CSV 文件路径
-input_csv_path = "./filtered_where_parallel_condition_sql.csv"
-output_csv_path = "./correct_where_parallel_condition_queries.csv"
+input_csv_path = "./complex_deep_queries.csv"
+output_csv_path = "./correct_deep_queries.csv"
 
 # 读取 CSV 文件
 df = pd.read_csv(input_csv_path)
@@ -29,6 +29,7 @@ def execute_sql(sql_query):
     """
     try:
         conn = psycopg2.connect(**DB_CONFIG)
+        print("connection successful!")
         conn.autocommit = True  # 让查询直接执行，不受事务影响
         cursor = conn.cursor()
 
@@ -46,6 +47,7 @@ def execute_sql(sql_query):
 
         # 如果查询在 5 秒内完成，且没有报错，并且没有返回结果，则视为有效查询
         if elapsed_time < 5 and result is None:
+            print("query finished in 5 seconds")
             return True
         return False
 
@@ -64,12 +66,12 @@ def execute_sql(sql_query):
 # 读取 SQL 并验证
 valid_queries = []
 
-for sql in df['original_sql']:
+for sql in df['updated_sql']:
     if execute_sql(sql):
         valid_queries.append([sql])  # 存储执行正常的且没有输出的 SQL
 
 # 保存正确的 SQL 语句
-valid_df = pd.DataFrame(valid_queries, columns=['original_sql'])
+valid_df = pd.DataFrame(valid_queries, columns=['updated_sql'])
 valid_df.to_csv(output_csv_path, index=False)
 
 print(f"筛选完成，已保存 {len(valid_queries)} 条正确的 SQL 语句到: {output_csv_path}")

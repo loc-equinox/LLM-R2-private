@@ -10,7 +10,7 @@ os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890"
 
 # 设置 OpenAI API 连接
 client = OpenAI(
-    api_key="your_api_key_here"  
+    api_key="your_api_key_here" 
 )
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"

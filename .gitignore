@@ -5,3 +5,4 @@ src/__pycache__/
 *.swp
 .DS_Store
 src/SentEval/.DS_Store
+src/generate_complex_sql/*.csv

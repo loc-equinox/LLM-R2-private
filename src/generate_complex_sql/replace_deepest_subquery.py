@@ -56,6 +56,6 @@ def process_row(row):
 df[["updated_sql", "original_sql", "complex_deepest_subquery"]] = df.apply(process_row, axis=1)
 
 # 保存到新的 CSV 文件
-df.to_csv("./complex_sql_deep_subqueries.csv", index=False, header=True)
+df.to_csv("./complex_deep_queries.csv", index=False, header=True)
 
-print("Processing complete. Results saved to 'updated_sql_with_subqueries.csv'.")
+print("Processing complete. Results saved to 'complex_deep_queries.csv'.")

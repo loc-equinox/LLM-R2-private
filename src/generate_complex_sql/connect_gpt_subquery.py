@@ -4,13 +4,11 @@ from sentence_transformers import SentenceTransformer
 import pandas as pd
 import csv
 
-os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890"
-os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890"
-
 
 # 设置 OpenAI API 连接
 client = OpenAI(
-    api_key=""
+    api_key=os.environ.get("ARK_API_KEY"),
+    base_url="https://ark.cn-beijing.volces.com/api/v3",
 )
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -19,7 +17,7 @@ pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 def query_turbo_model(prompt):
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
-        model="gpt-3.5-turbo",
+        model="ep-20250208072708-5r255",
         temperature=0,
     )
     return chat_completion.choices[0].message.content
