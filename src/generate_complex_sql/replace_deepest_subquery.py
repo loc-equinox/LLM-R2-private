@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlglot
 from sqlglot import expressions as exp
+import argparse
 
 def find_deepest_subquery(node):
     """ 迭代查找最内层子查询，避免递归深度溢出 """
@@ -39,23 +40,33 @@ def replace_deepest_subquery_in_sql(original_sql: str, deepest_subquery: str) ->
     except Exception as e:
         return f"Error: {e}"
 
-# 读取包含 original_sql 和 deepest_subquery 的 CSV 文件
-df = pd.read_csv("./complex_deepest_subqueries.csv")
+def main(input_file, output_file):
+    # 读取包含 original_sql 和 deepest_subquery 的 CSV 文件
+    df = pd.read_csv(input_file)
 
-# 处理每一行数据，替换最深子查询
-def process_row(row):
-    try:
-        original_sql = row["original_sql"]
-        deepest_subquery = row["complex_deepest_subquery"]
-        updated_sql = replace_deepest_subquery_in_sql(original_sql, deepest_subquery)
-        return pd.Series([updated_sql, original_sql, deepest_subquery])
-    except Exception as e:
-        return pd.Series([f"Error: {e}", row["original_sql"], row["deepest_subquery"]])
+    # 处理每一行数据，替换最深子查询
+    def process_row(row):
+        try:
+            original_sql = row["original_sql"]
+            deepest_subquery = row["complex_deepest_subquery"]
+            updated_sql = replace_deepest_subquery_in_sql(original_sql, deepest_subquery)
+            return pd.Series([updated_sql, original_sql, deepest_subquery])
+        except Exception as e:
+            return pd.Series([f"Error: {e}", row["original_sql"], row["complex_deepest_subquery"]])
 
-# 应用处理函数，更新 SQL
-df[["updated_sql", "original_sql", "complex_deepest_subquery"]] = df.apply(process_row, axis=1)
+    # 应用处理函数，更新 SQL
+    df[["updated_sql", "original_sql", "complex_deepest_subquery"]] = df.apply(process_row, axis=1)
 
-# 保存到新的 CSV 文件
-df.to_csv("./complex_deep_queries.csv", index=False, header=True)
+    # 保存到新的 CSV 文件
+    df.to_csv(output_file, index=False, header=True)
 
-print("Processing complete. Results saved to 'complex_deep_queries.csv'.")
+    print(f"Processing complete. Results saved to '{output_file}'.")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Replace deepest subqueries in SQL with complex versions')
+    parser.add_argument('-i', '--input', required=True, help='Input CSV file containing original SQL and complex subqueries')
+    parser.add_argument('-o', '--output', required=True, help='Output CSV file for modified SQL queries')
+    
+    args = parser.parse_args()
+    
+    main(args.input, args.output)

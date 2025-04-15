@@ -3,7 +3,7 @@ import os
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import csv
-
+import argparse
 
 # 设置 OpenAI API 连接
 client = OpenAI(
@@ -21,8 +21,6 @@ def query_turbo_model(prompt):
         temperature=0,
     )
     return chat_completion.choices[0].message.content
-
-
 
 def generate_complex_sql(subquery, original_sql):
     prompt = f"""
@@ -48,15 +46,11 @@ Rewritten Complex Subquery:
 """
     return query_turbo_model(prompt)
 
-
-if __name__ == "__main__":
-    file_path = "./deepest_subqueries.csv"   # 处理后的原始查询+最深子查询
-    output_path = "./complex_deepest_subqueries.csv"
-
-    df = pd.read_csv(file_path)
+def main(input_file, output_file):
+    df = pd.read_csv(input_file)
 
     # 创建 CSV 文件并写入表头
-    with open(output_path, 'w', newline='', encoding='utf-8') as f:
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(["id", "original_sql", "complex_deepest_subquery"])
 
@@ -71,8 +65,22 @@ if __name__ == "__main__":
         print("complex subquery:", complex_where)
         print("-" * 80)
 
-        with open(output_path, 'a', newline='', encoding='utf-8') as f:
+        with open(output_file, 'a', newline='', encoding='utf-8') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow([index, original_sql, complex_where])
 
-    print(f"The result has been saved to {output_path}")
+    print(f"The result has been saved to {output_file}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate complex versions of SQL subqueries using GPT')
+    parser.add_argument('-i', '--input',
+                        required=True,
+                        help='Path to input CSV file containing subqueries')
+    parser.add_argument('-o', '--output',
+                        required=True,
+                        help='Path to output CSV file for complex subqueries')
+    
+    args = parser.parse_args()
+    
+    main(args.input, args.output)

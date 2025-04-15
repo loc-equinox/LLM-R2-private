@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlglot
 from sqlglot import expressions as exp
+import argparse
 
 
 def find_deepest_subquery(node):
@@ -25,24 +26,35 @@ def extract_deepest_subquery(original_sql: str) -> str:
     return inner_subquery.sql(pretty=True, dialect="postgres").replace("\n", " ").replace("\r", "") if inner_subquery else "No subquery found"
 
 
-# 读取CSV文件
-df = pd.read_csv("../../data/data_llmr2/queries/queries_tpch_test.csv")
+def main(input_file, output_file):
+    # 读取CSV文件
+    df = pd.read_csv(input_file)
 
-# 处理每一行数据，提取最内层子查询
-def process_row(row):
-    try:
-        original_sql = row["original_sql"]
-        deepest_sql = extract_deepest_subquery(original_sql)
-        return pd.Series([original_sql, deepest_sql])
-    except Exception as e:
-        return pd.Series([row["original_sql"], f"Error: {e}"])
+    # 处理每一行数据，提取最内层子查询
+    def process_row(row):
+        try:
+            original_sql = row["original_sql"]
+            deepest_sql = extract_deepest_subquery(original_sql)
+            return pd.Series([original_sql, deepest_sql])
+        except Exception as e:
+            return pd.Series([row["original_sql"], f"Error: {e}"])
+
+    # 应用处理函数，提取每个 SQL 的最内层子查询
+    df[["original_sql", "deepest_subquery"]] = df.apply(process_row, axis=1)
+
+    # 保存到新CSV文件，确保 SQL 在一行内且没有换行
+    df.to_csv(output_file, index=False, header=True)
+
+    print(f"Processing complete. Results saved to '{output_file}'.")
 
 
-# 应用处理函数，提取每个 SQL 的最内层子查询
-df[["original_sql", "deepest_subquery"]] = df.apply(process_row, axis=1)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Extract deepest subqueries from SQL queries in a CSV file.')
+    parser.add_argument('-i', '--input',
+                        required=True, help='Path to input CSV file')
+    parser.add_argument('-o', '--output',
+                        required=True, help='Path to output CSV file')
 
-# 保存到新CSV文件，确保 SQL 在一行内且没有换行
-df.to_csv("./deepest_subqueries.csv", index=False, header=True)
+    args = parser.parse_args()
 
-print("Processing complete. Results saved to 'deepest_subqueries.csv'.")
-
+    main(args.input, args.output)

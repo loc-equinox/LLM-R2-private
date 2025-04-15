@@ -1,6 +1,7 @@
 import time
 import pandas as pd
 import psycopg2
+import argparse
 
 DB_CONFIG = {
     "dbname": "tpch",
@@ -9,18 +10,6 @@ DB_CONFIG = {
     "host": "localhost",
     "port": "5432"
 }
-
-# CSV 文件路径
-input_csv_path = "./complex_deep_queries.csv"
-output_csv_path = "./correct_deep_queries.csv"
-
-# 读取 CSV 文件
-df = pd.read_csv(input_csv_path)
-
-# 确保 'original_sql' 列存在
-if 'original_sql' not in df.columns:
-    raise ValueError("CSV 文件中找不到 'original_sql' 列")
-
 
 def execute_sql(sql_query):
     """
@@ -62,16 +51,33 @@ def execute_sql(sql_query):
         print(f"SQL 执行错误: {e}")
         return False
 
+def main(input_file, output_file):
+    # 读取 CSV 文件
+    df = pd.read_csv(input_file)
 
-# 读取 SQL 并验证
-valid_queries = []
+    # 确保 'updated_sql' 列存在
+    if 'updated_sql' not in df.columns:
+        raise ValueError(f"CSV 文件中找不到 'updated_sql' 列: {input_file}")
 
-for sql in df['updated_sql']:
-    if execute_sql(sql):
-        valid_queries.append([sql])  # 存储执行正常的且没有输出的 SQL
+    # 读取 SQL 并验证
+    valid_queries = []
 
-# 保存正确的 SQL 语句
-valid_df = pd.DataFrame(valid_queries, columns=['updated_sql'])
-valid_df.to_csv(output_csv_path, index=False)
+    for sql in df['updated_sql']:
+        if execute_sql(sql):
+            valid_queries.append([sql])  # 存储执行正常的且没有输出的 SQL
 
-print(f"筛选完成，已保存 {len(valid_queries)} 条正确的 SQL 语句到: {output_csv_path}")
+    # 保存正确的 SQL 语句
+    valid_df = pd.DataFrame(valid_queries, columns=['updated_sql'])
+    valid_df.to_csv(output_file, index=False)
+
+    print(f"筛选完成，已保存 {len(valid_queries)} 条正确的 SQL 语句到: {output_file}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Filter SQL queries by executing them against PostgreSQL')
+    parser.add_argument('-i', '--input', required=True, help='Input CSV file containing SQL queries to test')
+    parser.add_argument('-o', '--output', required=True, help='Output CSV file for valid SQL queries')
+    
+    args = parser.parse_args()
+    
+    main(args.input, args.output)
+
