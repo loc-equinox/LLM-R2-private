@@ -55,7 +55,11 @@ def main(input_file, output_file):
         csv_writer.writerow(["id", "original_sql", "complex_deepest_subquery"])
 
     # 逐行处理并写入 CSV
+    # i = 0
     for index, row in df.iterrows():
+        # i += 1
+        # if i > 5:
+        #    break
         subquery = row["deepest_subquery"]
         original_sql = row["original_sql"]
         complex_where = generate_complex_sql(subquery, original_sql)

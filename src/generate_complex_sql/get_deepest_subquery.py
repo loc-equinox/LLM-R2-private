@@ -30,10 +30,14 @@ def main(input_file, output_file):
     # 读取CSV文件
     df = pd.read_csv(input_file)
 
+    # For convenient testing, only process the first five rows
+    df = df.head(5)
+
     # 处理每一行数据，提取最内层子查询
     def process_row(row):
         try:
-            original_sql = row["original_sql"]
+            original_sql = row["original_sql"] if "original_sql" in row\
+                                               else row["updated_sql"]
             deepest_sql = extract_deepest_subquery(original_sql)
             return pd.Series([original_sql, deepest_sql])
         except Exception as e:

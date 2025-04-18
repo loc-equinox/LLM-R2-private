@@ -1,5 +1,6 @@
 import subprocess
 import argparse
+import copy
 import time
 import sys
 from typing import List
@@ -47,9 +48,16 @@ def run_command_with_realtime_output(cmd: List[str]) -> bool:
         return False
 
 
-def run_pipeline(input_file: str, output_dir: str = ".") -> None:
+def run_one_pipeline(pipeline: List[List[str]]):
+    for cmd in pipeline:
+        if not run_command_with_realtime_output(cmd):
+            print("\n\033[91mPipeline failed! Stopping execution.\033[0m")
+            sys.exit(1)
+    
+
+def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_once") -> None:
     """Run the complete SQL processing pipeline with real-time output"""
-    commands = [
+    cmd_deepest_query_once = [
         # Step 1: Extract deepest subqueries
         [
             "python3", "get_deepest_subquery.py",
@@ -76,10 +84,21 @@ def run_pipeline(input_file: str, output_dir: str = ".") -> None:
         ]
     ]
 
-    for cmd in commands:
-        if not run_command_with_realtime_output(cmd):
-            print("\n\033[91mPipeline failed! Stopping execution.\033[0m")
-            sys.exit(1)
+    # The pipeline that allows for multiple rounds of
+    # rewriting of the deepest subquery.
+    cmd_deepest_query_multiple = copy.deepcopy(cmd_deepest_query_once)
+    cmd_deepest_query_multiple[0][3] = f"{output_dir}/correct_deep_queries.csv"
+
+    pipelines = {"deepest_query_once": cmd_deepest_query_once,
+                 "deepest_query_multiple": cmd_deepest_query_multiple}
+
+    if method == "deepest_query_multiple":
+        run_one_pipeline(cmd_deepest_query_once)
+        for _ in range(4):
+            run_one_pipeline(cmd_deepest_query_multiple)
+        return
+
+    run_one_pipeline(pipelines[method])
 
     print("\n\033[1;92mAll processing steps completed successfully!\033[0m")
     print(f"Final output saved to: \033[1m{output_dir}/correct_deep_queries.csv\033[0m")
@@ -87,9 +106,9 @@ def run_pipeline(input_file: str, output_dir: str = ".") -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the complete SQL query processing pipeline with real-time output')
-    parser.add_argument('-i', '--input', required=True, 
+    parser.add_argument('-i', '--input', required=True,
                        help='Input CSV file containing original SQL queries')
-    parser.add_argument('-o', '--output-dir', default=".", 
+    parser.add_argument('-o', '--output-dir', default=".",
                        help='Output directory for processed files (default: current directory)')
 
     args = parser.parse_args()
