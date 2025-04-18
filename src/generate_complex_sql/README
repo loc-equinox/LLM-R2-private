@@ -10,26 +10,35 @@ and 2) Make the WHERE clause more complicated.
 Usage:
 + Run generator.py, specifiying the input(-i)
   and output(-o, default is ./) paths and the 
-  method used to make the query more complex.
-  (example: python3 generator.py -i ../../data/data_llmr2/queries/queries_tpch_test.csv)
-+ Add a new pipeline by adding all the instructions in run_pipeline.
+  method(-m) to make the query more complex.
+  (example: python3 generator.py -i ../../data/data_llmr2/queries/queries_tpch_test.csv -m "deepest_query_multiple")
 
-## Method 1 pipeline:
++ Add a new pipeline by adding a list containing all 
+  the instructions in run_pipeline. If the pipeline 
+  only needs to be run once, then nothing needs to be done.
+  Otherwise, you might want to add some code to identify
+  this method and handle it.
+
+Supported methods:
++ deepest_query_once:
+	+ Rewrite the deepest subquery of the input query, if 
+	  the input query has no subqueries, returns the input
+	  query.
++ deepest_query_multiple:
+	+ Iterate the deepest_query_once process multiple times.
+	  the number of iterations is hard-coded into generator.py
+
+TODO:
++ deepest_query_multiple will repeatedly process those queries
+  that don't have subqueries, which is useless. 
++ If the rewritten subquery has syntax errors, this query will 
+  be abandoned, which leads to significant data loss, especially
+  during multiple iterations. Should add recovery method(for
+  example, resending the query rewriting task to the LLM or
+  asking LLM to fix the error).
 
 
-get_deepest_subquery.py:
-	reads from: ../../data/data_llmr2/queries/queries_tpch_test.csv
-	writes to: ./deepest_subqueries.csv
-
-connect_gpt_subquery.py: 
-	reads from: ./deepest_subqueries.csv
-	writes to: ./complex_deepest_subqueries.csv
-	connects to LLM API
-
-replace_deepest_subquery.py:
-	reads from: ./complex_deepest_subqueries.csv
-	writes to: ./complex_deep_queries.csv
-
+(TODO: add this method in generator.py)
 ## Method 2 pipeline:
 
 connect_gpt-where-parallel.py:

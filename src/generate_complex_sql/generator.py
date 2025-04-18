@@ -107,10 +107,12 @@ def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_o
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the complete SQL query processing pipeline with real-time output')
     parser.add_argument('-i', '--input', required=True,
-                       help='Input CSV file containing original SQL queries')
+                        help='Input CSV file containing original SQL queries')
     parser.add_argument('-o', '--output-dir', default=".",
-                       help='Output directory for processed files (default: current directory)')
+                        help='Output directory for processed files (default: current directory)')
+    parser.add_argument('-m', '--method', default="deepest_query_once",
+                        help='The method used to make the query more complex')
 
     args = parser.parse_args()
 
-    run_pipeline(args.input, args.output_dir)
+    run_pipeline(args.input, args.output_dir, args.method)

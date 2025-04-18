@@ -38,7 +38,7 @@ Original SQL Query: {original_sql}
 Original Subquery to be rewritten: {subquery}
 
 Output Instructions:
-- Return only the rewritten complex subquery on a single line.
+- Return only the rewritten complex subquery **on a single line**.
 - Do **not** include line breaks or any additional explanation.
 - Do **not** return the full original query—just the rewritten subquery.
 

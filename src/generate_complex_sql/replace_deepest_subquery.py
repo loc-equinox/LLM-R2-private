@@ -8,6 +8,7 @@ def find_deepest_subquery(node):
     """ 迭代查找最内层子查询，避免递归深度溢出 """
     subqueries = list(node.find_all(exp.Subquery))  # 获取所有子查询
     if not subqueries:
+        print("No subqueries!")
         return None
 
     # 计算每个子查询的嵌套深度
@@ -31,27 +32,31 @@ def extract_deepest_subquery(original_sql: str) -> str:
 def replace_deepest_subquery_in_sql(original_sql: str, deepest_subquery: str) -> str:
     """Replace the deepest subquery in original_sql with deepest_subquery."""
     '''
-    testing
+    testing the replace_deepest_subquery_in_sql
 from replace_deepest_subquery import *
 original = "SELECT * FROM (SELECT * FROM table) AS subq"
 replacement = "SELECT 1"
 rewritten = replace_deepest_subquery_in_sql(original, replacement)
 print(rewritten)  # Output: "SELECT * FROM (SELECT 1) AS subq
+
     '''
     try:
         # Parse SQL and ensure semicolon termination
         original_ast = sqlglot.parse_one(original_sql.strip() + ";")
         replacement_ast = sqlglot.parse_one(deepest_subquery.strip() + ";")
+        print("Parsing completed")
 
         # Find deepest subquery node
         deepest_node = find_deepest_subquery(original_ast)
+        print("deepest_node found")
         if not deepest_node:
             return original_sql
-
-        # print("deepest_node found!")
-        deepest_node.set("this", replacement_ast)
+        else:
+            deepest_node.set("this", replacement_ast)
+        # print(original_ast)
         return original_ast.sql(pretty=True, dialect="postgres")
     except Exception:
+        print("exception occurred!")
         return original_sql
 
 
@@ -66,6 +71,8 @@ def main(input_file, output_file):
             deepest_subquery = row["complex_deepest_subquery"]
             updated_sql = replace_deepest_subquery_in_sql(original_sql,
                                                           deepest_subquery)
+            print(updated_sql)
+            print("")
             return pd.Series([updated_sql, original_sql, deepest_subquery])
         except Exception as e:
             return pd.Series([f"Error: {e}", row["original_sql"],
