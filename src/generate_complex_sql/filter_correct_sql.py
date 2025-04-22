@@ -1,15 +1,9 @@
 import time
+import argparse
 import pandas as pd
 import psycopg2
-import argparse
+from generator import DB_CONFIG
 
-DB_CONFIG = {
-    "dbname": "tpch",
-    "user": "leshanchen",
-    "password": "",
-    "host": "localhost",
-    "port": "5432"
-}
 
 def execute_sql(sql_query):
     """

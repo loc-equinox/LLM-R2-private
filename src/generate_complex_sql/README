@@ -13,24 +13,31 @@ Usage:
   method(-m) to make the query more complex.
   (example: python3 generator.py -i ../../data/data_llmr2/queries/queries_tpch_test.csv -m "deepest_query_multiple")
 
-+ Add a new pipeline by adding a list containing all 
-  the instructions in run_pipeline. If the pipeline 
-  only needs to be run once, then nothing needs to be done.
-  Otherwise, you might want to add some code to identify
-  this method and handle it.
++ Specify the database connection parameters in DB_CONFIG
+  in generator.py.
+
+To add a new method:
++ Add a list containing all 
+  the instructions of this method's pipeline in 
+  run_pipeline(). 
++ If the pipeline needs to be run multiple times
+  (iterative), then you need to add some code
+  to handle the method in run_pipeline(). See
+  the implementation for deepest_query_multiple
+  in run_pipeline() for more details.
++ Also, the prompt for the method should be added
+  in connect_llm.py.
 
 Supported methods:
 + deepest_query_once:
-	+ Rewrite the deepest subquery of the input query, if 
-	  the input query has no subqueries, returns the input
-	  query.
+    + Rewrite the deepest subquery of the input query, if 
+      the input query has no subqueries, returns the input
+      query.
 + deepest_query_multiple:
-	+ Iterate the deepest_query_once process multiple times.
-	  the number of iterations is hard-coded into generator.py
+    + Iterate the deepest_query_once process multiple times.
+      the number of iterations is hard-coded into generator.py
 
 TODO:
-+ deepest_query_multiple will repeatedly process those queries
-  that don't have subqueries, which is useless. 
 + If the rewritten subquery has syntax errors, this query will 
   be abandoned, which leads to significant data loss, especially
   during multiple iterations. Should add recovery method(for

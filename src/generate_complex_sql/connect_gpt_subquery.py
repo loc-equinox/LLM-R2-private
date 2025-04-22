@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer
 import pandas as pd
 import csv
 import argparse
+from generator import DB_CONFIG
 
 # 设置 OpenAI API 连接
 client = OpenAI(
@@ -84,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output',
                         required=True,
                         help='Path to output CSV file for complex subqueries')
-    
+
     args = parser.parse_args()
-    
+
     main(args.input, args.output)

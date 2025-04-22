@@ -48,10 +48,10 @@ print(rewritten)  # Output: "SELECT * FROM (SELECT 1) AS subq
 
         # Find deepest subquery node
         deepest_node = find_deepest_subquery(original_ast)
-        print("deepest_node found")
         if not deepest_node:
-            return original_sql
+            return deepest_subquery
         else:
+            print("deepest_node found")
             deepest_node.set("this", replacement_ast)
         # print(original_ast)
         return original_ast.sql(pretty=True, dialect="postgres")
