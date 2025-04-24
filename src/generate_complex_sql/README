@@ -38,6 +38,7 @@ Supported methods:
       the number of iterations is hard-coded into generator.py
 
 TODO:
++ Put all the prompts in a separate file(instead of in connect_llm.py)
 + If the rewritten subquery has syntax errors, this query will 
   be abandoned, which leads to significant data loss, especially
   during multiple iterations. Should add recovery method(for

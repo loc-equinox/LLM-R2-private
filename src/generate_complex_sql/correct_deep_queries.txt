@@ -1,0 +1,538 @@
+updated_sql
+"SELECT
+  s_acctbal,
+  s_name,
+  n_name,
+  p_partkey,
+  p_mfgr,
+  s_address,
+  s_phone,
+  s_comment
+FROM part, supplier, partsupp, nation, region
+WHERE
+  p_partkey = ps_partkey
+  AND s_suppkey = ps_suppkey
+  AND p_size = 20
+  AND p_type LIKE '%COPPER'
+  AND s_nationkey = n_nationkey
+  AND n_regionkey = r_regionkey
+  AND r_name = 'AMERICA'
+  AND ps_supplycost = (
+    (
+      SELECT
+        MIN(sub1.ps_supplycost)
+      FROM (
+        SELECT
+          ps.ps_supplycost
+        FROM partsupp AS ps, supplier AS s, nation AS n, region AS r
+        WHERE
+          ps.ps_partkey = ps.ps_partkey
+          AND s.s_suppkey = ps.ps_suppkey
+          AND s.s_nationkey = n.n_nationkey
+          AND n.n_regionkey = r.r_regionkey
+          AND r.r_name = 'AMERICA'
+          AND ps.ps_supplycost > (
+            (
+              SELECT
+                AVG(sub3.ps_supplycost)
+              FROM (
+                SELECT
+                  ps3.ps_supplycost
+                FROM partsupp AS ps3, supplier AS s3, nation AS n3, region AS r3
+                WHERE
+                  ps3.ps_partkey = ps3.ps_partkey
+                  AND s3.s_suppkey = ps3.ps_suppkey
+                  AND s3.s_nationkey = n3.n_nationkey
+                  AND n3.n_regionkey = r3.r_regionkey
+                  AND r3.r_name = 'AMERICA'
+                  AND ps3.ps_supplycost < (
+                    SELECT
+                      MAX(sub4.ps_supplycost)
+                    FROM (
+                      SELECT
+                        ps4.ps_supplycost
+                      FROM partsupp AS ps4, supplier AS s4, nation AS n4, region AS r4
+                      WHERE
+                        ps4.ps_partkey = ps4.ps_partkey
+                        AND s4.s_suppkey = ps4.ps_suppkey
+                        AND s4.s_nationkey = n4.n_nationkey
+                        AND n4.n_regionkey = r4.r_regionkey
+                        AND r4.r_name = 'AMERICA'
+                    ) AS sub4
+                  )
+              ) AS sub3
+            )
+          )
+      ) AS sub1
+    )
+  )
+ORDER BY
+  s_acctbal DESC NULLS LAST,
+  n_name NULLS FIRST,
+  s_name NULLS FIRST,
+  p_partkey NULLS FIRST"
+"(
+  SELECT
+    1
+  FROM (
+    SELECT
+      l_orderkey
+    FROM (
+      (
+        SELECT
+          sub4.l_orderkey,
+          sub4.count_per_order
+        FROM (
+          SELECT
+            sub3.l_orderkey,
+            COUNT(*) AS count_per_order
+          FROM (
+            SELECT
+              l.l_orderkey
+            FROM lineitem AS l
+            JOIN (
+              SELECT
+                o.o_orderkey
+              FROM orders AS o
+              WHERE
+                o.o_orderdate >= CAST('1994-01-01' AS DATE)
+                AND o.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+            ) AS o_sub
+              ON l.l_orderkey = o_sub.o_orderkey
+          ) AS sub3
+          GROUP BY
+            sub3.l_orderkey
+        ) AS sub4
+        WHERE
+          sub4.count_per_order > (
+            SELECT
+              sub5.avg_count
+            FROM (
+              SELECT
+                AVG(count_val) AS avg_count
+              FROM (
+                SELECT
+                  COUNT(*) AS count_val
+                FROM lineitem AS l2
+                JOIN (
+                  SELECT
+                    o2.o_orderkey
+                  FROM orders AS o2
+                  WHERE
+                    o2.o_orderdate >= CAST('1994-01-01' AS DATE)
+                    AND o2.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                ) AS o_sub2
+                  ON l2.l_orderkey = o_sub2.o_orderkey
+                GROUP BY
+                  l2.l_orderkey
+              ) AS sub6
+            ) AS sub5
+          )
+      )
+    ) AS sub1
+    WHERE
+      sub1.count_per_order > (
+        SELECT
+          AVG(count_val)
+        FROM (
+          (
+            SELECT
+              COUNT(*) AS count_val
+            FROM (
+              SELECT
+                l_orderkey
+              FROM (
+                SELECT
+                  l_orderkey,
+                  l_partkey,
+                  l_suppkey
+                FROM (
+                  SELECT
+                    l_orderkey,
+                    l_partkey,
+                    l_suppkey,
+                    l_quantity
+                  FROM (
+                    SELECT
+                      l_orderkey,
+                      l_partkey,
+                      l_suppkey,
+                      l_quantity,
+                      l_extendedprice
+                    FROM lineitem
+                    WHERE
+                      l_shipdate >= CAST('1994-01-01' AS DATE)
+                      AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                  ) AS sub11
+                  WHERE
+                    l_extendedprice > (
+                      SELECT
+                        AVG(l_extendedprice)
+                      FROM lineitem
+                      WHERE
+                        l_shipdate >= CAST('1994-01-01' AS DATE)
+                        AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                    )
+                ) AS sub12
+                WHERE
+                  l_quantity > (
+                    SELECT
+                      AVG(l_quantity)
+                    FROM lineitem
+                    WHERE
+                      l_shipdate >= CAST('1994-01-01' AS DATE)
+                      AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                  )
+              ) AS sub13
+              WHERE
+                l_suppkey IN (
+                  SELECT
+                    s_suppkey
+                  FROM supplier
+                  WHERE
+                    s_acctbal > (
+                      SELECT
+                        AVG(s_acctbal)
+                      FROM supplier
+                      WHERE
+                        s_nationkey IN (
+                          SELECT
+                            n_nationkey
+                          FROM nation
+                          WHERE
+                            n_regionkey IN (
+                              SELECT
+                                r_regionkey
+                              FROM region
+                              WHERE
+                                r_name = 'AMERICA'
+                            )
+                        )
+                    )
+                )
+              GROUP BY
+                l_orderkey
+            ) AS sub14
+          )
+        ) AS sub2
+      )
+      AND l_orderkey IN (
+        (
+          SELECT
+            sub10.o_orderkey
+          FROM (
+            SELECT
+              sub9.o_orderkey
+            FROM (
+              SELECT
+                sub8.o_orderkey
+              FROM (
+                SELECT
+                  sub7.o_orderkey
+                FROM (
+                  SELECT
+                    sub6.o_orderkey
+                  FROM (
+                    SELECT
+                      sub5.o_orderkey
+                    FROM (
+                      SELECT
+                        sub4.o_orderkey
+                      FROM (
+                        SELECT
+                          sub3.o_orderkey
+                        FROM (
+                          SELECT
+                            sub2.o_orderkey
+                          FROM (
+                            SELECT
+                              o.o_orderkey
+                            FROM orders AS o
+                            WHERE
+                              o.o_orderdate >= CAST('1994-01-01' AS DATE)
+                              AND o.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                          ) AS sub2
+                          WHERE
+                            sub2.o_orderkey IN (
+                              SELECT
+                                sub1.o_orderkey
+                              FROM (
+                                SELECT
+                                  o1.o_orderkey
+                                FROM orders AS o1
+                                WHERE
+                                  o1.o_orderdate >= CAST('1994-01-01' AS DATE)
+                                  AND o1.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                              ) AS sub1
+                            )
+                        ) AS sub3
+                        WHERE
+                          sub3.o_orderkey IN (
+                            SELECT
+                              sub11.o_orderkey
+                            FROM (
+                              SELECT
+                                o3.o_orderkey
+                              FROM orders AS o3
+                              WHERE
+                                o3.o_orderdate >= CAST('1994-01-01' AS DATE)
+                                AND o3.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                            ) AS sub11
+                          )
+                      ) AS sub4
+                      WHERE
+                        sub4.o_orderkey IN (
+                          SELECT
+                            sub12.o_orderkey
+                          FROM (
+                            SELECT
+                              o4.o_orderkey
+                            FROM orders AS o4
+                            WHERE
+                              o4.o_orderdate >= CAST('1994-01-01' AS DATE)
+                              AND o4.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                          ) AS sub12
+                        )
+                    ) AS sub5
+                    WHERE
+                      sub5.o_orderkey IN (
+                        SELECT
+                          sub13.o_orderkey
+                        FROM (
+                          SELECT
+                            o5.o_orderkey
+                          FROM orders AS o5
+                          WHERE
+                            o5.o_orderdate >= CAST('1994-01-01' AS DATE)
+                            AND o5.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                        ) AS sub13
+                      )
+                  ) AS sub6
+                  WHERE
+                    sub6.o_orderkey IN (
+                      SELECT
+                        sub14.o_orderkey
+                      FROM (
+                        SELECT
+                          o6.o_orderkey
+                        FROM orders AS o6
+                        WHERE
+                          o6.o_orderdate >= CAST('1994-01-01' AS DATE)
+                          AND o6.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                      ) AS sub14
+                    )
+                ) AS sub7
+                WHERE
+                  sub7.o_orderkey IN (
+                    SELECT
+                      sub15.o_orderkey
+                    FROM (
+                      SELECT
+                        o7.o_orderkey
+                      FROM orders AS o7
+                      WHERE
+                        o7.o_orderdate >= CAST('1994-01-01' AS DATE)
+                        AND o7.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                    ) AS sub15
+                  )
+              ) AS sub8
+              WHERE
+                sub8.o_orderkey IN (
+                  SELECT
+                    sub16.o_orderkey
+                  FROM (
+                    SELECT
+                      o8.o_orderkey
+                    FROM orders AS o8
+                    WHERE
+                      o8.o_orderdate >= CAST('1994-01-01' AS DATE)
+                      AND o8.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                  ) AS sub16
+                )
+            ) AS sub9
+            WHERE
+              sub9.o_orderkey IN (
+                SELECT
+                  sub17.o_orderkey
+                FROM (
+                  SELECT
+                    o9.o_orderkey
+                  FROM orders AS o9
+                  WHERE
+                    o9.o_orderdate >= CAST('1994-01-01' AS DATE)
+                    AND o9.o_orderdate < CAST('1994-01-01' AS DATE) + INTERVAL '3 MONTH'
+                ) AS sub17
+              )
+          ) AS sub10
+        )
+      )
+  ) AS sub3
+  WHERE
+    EXISTS(
+      SELECT
+        1
+      FROM orders AS o2
+      WHERE
+        sub3.l_orderkey = o2.o_orderkey
+    )
+    AND EXISTS(
+      SELECT
+        1
+      FROM lineitem AS l2
+      WHERE
+        l2.l_orderkey = sub3.l_orderkey AND l2.l_commitdate < l2.l_receiptdate
+    )
+  LIMIT 1
+)"
+"(
+  SELECT
+    SUM(subquery1.l_extendedprice * subquery1.l_discount)
+  FROM (
+    SELECT
+      l.l_extendedprice,
+      l.l_discount
+    FROM lineitem AS l
+    WHERE
+      l.l_shipdate >= (
+        SELECT
+          MIN(s.s_shipdate)
+        FROM (
+          SELECT DISTINCT
+            l_shipdate AS s_shipdate
+          FROM lineitem
+          WHERE
+            l_shipdate >= CAST('1994-01-01' AS DATE)
+            AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+        ) AS s
+      )
+      AND l.l_shipdate < (
+        SELECT
+          MAX(s.s_shipdate)
+        FROM (
+          SELECT DISTINCT
+            l_shipdate AS s_shipdate
+          FROM lineitem
+          WHERE
+            l_shipdate >= CAST('1994-01-01' AS DATE)
+            AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+        ) AS s
+      )
+      AND l.l_discount BETWEEN (
+        (
+          SELECT
+            AVG(d1.l_discount) - 0.01
+          FROM (
+            SELECT
+              *
+            FROM lineitem AS d1
+            WHERE
+              d1.l_shipdate >= (
+                SELECT
+                  MIN(d2.l_shipdate)
+                FROM (
+                  SELECT
+                    l_shipdate
+                  FROM lineitem
+                  WHERE
+                    l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS d2
+              )
+              AND d1.l_shipdate < (
+                SELECT
+                  MAX(d3.l_shipdate)
+                FROM (
+                  SELECT
+                    l_shipdate
+                  FROM lineitem
+                  WHERE
+                    l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS d3
+              )
+              AND d1.l_discount BETWEEN (
+                SELECT
+                  AVG(d4.l_discount) - 0.01
+                FROM (
+                  SELECT
+                    *
+                  FROM lineitem AS d4
+                  WHERE
+                    d4.l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND d4.l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS d4
+              ) AND (
+                SELECT
+                  AVG(d5.l_discount) + 0.01
+                FROM (
+                  SELECT
+                    *
+                  FROM lineitem AS d5
+                  WHERE
+                    d5.l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND d5.l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS d5
+              )
+          ) AS d1
+        )
+      ) AND (
+        SELECT
+          AVG(d.l_discount) + 0.01
+        FROM lineitem AS d
+        WHERE
+          d.l_shipdate >= CAST('1994-01-01' AS DATE)
+          AND d.l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+      )
+      AND l.l_quantity < (
+        (
+          SELECT
+            MAX(subsubquery2.l_quantity) - 5
+          FROM (
+            SELECT
+              l_quantity
+            FROM lineitem AS subsubquery1
+            WHERE
+              subsubquery1.l_shipdate >= (
+                SELECT
+                  MIN(subsubsubquery1.s_shipdate)
+                FROM (
+                  SELECT DISTINCT
+                    l_shipdate AS s_shipdate
+                  FROM lineitem
+                  WHERE
+                    l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS subsubsubquery1
+              )
+              AND subsubquery1.l_shipdate < (
+                SELECT
+                  MAX(subsubsubquery2.s_shipdate)
+                FROM (
+                  SELECT DISTINCT
+                    l_shipdate AS s_shipdate
+                  FROM lineitem
+                  WHERE
+                    l_shipdate >= CAST('1994-01-01' AS DATE)
+                    AND l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+                ) AS subsubsubquery2
+              )
+              AND subsubquery1.l_discount BETWEEN (
+                SELECT
+                  AVG(subsubsubquery3.l_discount) - 0.01
+                FROM lineitem AS subsubsubquery3
+                WHERE
+                  subsubsubquery3.l_shipdate >= CAST('1994-01-01' AS DATE)
+                  AND subsubsubquery3.l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+              ) AND (
+                SELECT
+                  AVG(subsubsubquery4.l_discount) + 0.01
+                FROM lineitem AS subsubsubquery4
+                WHERE
+                  subsubsubquery4.l_shipdate >= CAST('1994-01-01' AS DATE)
+                  AND subsubsubquery4.l_shipdate < CAST('1994-01-01' AS DATE) + INTERVAL '1 YEAR'
+              )
+          ) AS subsubquery2
+        )
+      )
+  ) AS subquery1
+)"

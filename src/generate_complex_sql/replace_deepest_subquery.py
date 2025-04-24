@@ -45,6 +45,8 @@ print(rewritten)  # Output: "SELECT * FROM (SELECT 1) AS subq
         original_ast = sqlglot.parse_one(original_sql.strip() + ";")
         replacement_ast = sqlglot.parse_one(deepest_subquery.strip() + ";")
         print("Parsing completed")
+        if original_ast == replacement_ast:
+            return original_sql
 
         # Find deepest subquery node
         deepest_node = find_deepest_subquery(original_ast)
@@ -71,8 +73,6 @@ def main(input_file, output_file):
             deepest_subquery = row["complex_deepest_subquery"]
             updated_sql = replace_deepest_subquery_in_sql(original_sql,
                                                           deepest_subquery)
-            print(updated_sql)
-            print("")
             return pd.Series([updated_sql, original_sql, deepest_subquery])
         except Exception as e:
             return pd.Series([f"Error: {e}", row["original_sql"],

@@ -88,7 +88,7 @@ def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_o
         ],
         # Step 4: Filter correct SQL queries
         [
-            "python3", "filter_correct_sql.py",
+            "python3", "-u", "filter_correct_sql.py",
             "-i", f"{output_dir}/complex_deep_queries.csv",
             "-o", f"{output_dir}/correct_deep_queries.csv"
         ]
@@ -104,7 +104,8 @@ def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_o
 
     if method == "deepest_query_multiple":
         run_one_pipeline(cmd_deepest_query_once)
-        for _ in range(4):
+        for i in range(4):
+            print(f"Iteration round {i}")
             run_one_pipeline(cmd_deepest_query_multiple)
         return
 

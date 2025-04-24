@@ -3,6 +3,7 @@ import os
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import csv
+from typing import Dict, List, Tuple
 import argparse
 from generator import DB_CONFIG
 import psycopg2
@@ -13,6 +14,49 @@ client = OpenAI(
     api_key=os.environ.get("ARK_API_KEY"),
     base_url="https://ark.cn-beijing.volces.com/api/v3",
 )
+
+
+def get_user_tables(db_config: Dict) -> Dict[str, List[Tuple[str, str]]]:
+    """
+    Retrieve user-created tables (public schema) with columns and data types
+
+    Args:
+        db_config: Database connection parameters
+
+    Returns:
+        Dictionary of {table_name: [(column_name, data_type)]}
+    """
+    result = {}
+    conn = None
+
+    try:
+        conn = psycopg2.connect(**db_config)
+        with conn.cursor() as cursor:
+            # Query for user-created tables in public schema
+            cursor.execute("""
+                SELECT
+                    table_name,
+                    column_name,
+                    data_type
+                FROM information_schema.columns
+                WHERE table_schema = 'public'
+                ORDER BY table_name, ordinal_position;
+            """)
+
+            # Build the result structure
+            for table, column, data_type in cursor.fetchall():
+                if table not in result:
+                    result[table] = []
+                result[table].append((column, data_type))
+
+    except OperationalError as e:
+        print(f"Connection error: {e}")
+        raise
+    finally:
+        if conn:
+            conn.close()
+
+    return result
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -26,7 +70,7 @@ def query_turbo_model(prompt):
     return chat_completion.choices[0].message.content
 
 
-def get_inital_prompt(method, target_snippet, original_sql):
+def get_initial_prompt(method, target_snippet, original_sql, schema_info):
     """
     Returns the prompt that is used when connecting to
     the LLM to process a given snippet for the first time.
@@ -47,6 +91,8 @@ Original SQL Query: {original_sql}
 
 Original Subquery to be rewritten: {target_snippet}
 
+Schemas in the database, for reference: {schema_info}
+
 Output Instructions:
 - Return only the rewritten complex subquery **on a single line**.
 - Do **not** include line breaks or any additional explanation.
@@ -58,7 +104,7 @@ Rewritten Complex Subquery:
 
 
 def get_recovery_prompt(method, target_snippet, original_sql,
-                        error_snippet, error_msg):
+                        error_snippet, error_msg, schema_info):
     """
     Returns the prompt that is used when connecting to
     the LLM to re-process a given snippet, since previous
@@ -80,12 +126,20 @@ Original SQL Query: {original_sql}
 
 Original Subquery to be rewritten: {target_snippet}
 
+Schemas in the database, for reference: {schema_info}
+
 Another SQL expert has tried to rewrite the subquery but
 failed. His attempt: {error_snippet}
 
 The error message generated: {error_msg}
 
-You should build upon his work and make the subquery works.
+You should build upon his work and make the subquery work, so please
+at least check that your response is DIFFERENT from his, since his
+attempt is obviously not correct.
+
+Also, you should make sure to take account of the error message
+generated for the previous faulty subquery, and make sure you
+do not make the same mistakes.
 
 Output Instructions:
 - Return only the rewritten complex subquery **on a single line**.
@@ -134,21 +188,24 @@ def validate_snippet(method, snippet, db_config):
     return (True, "")
 
 
-def generate_complex_sql(method, target_snippet, original_sql):
-    initial_prompt = get_inital_prompt(method, target_snippet, original_sql)
+def generate_complex_sql(method, target_snippet,
+                         original_sql, schema_info):
+    initial_prompt = get_initial_prompt(method, target_snippet,
+                                        original_sql, schema_info)
     result = query_turbo_model(initial_prompt)
     tries = 0
     validation = validate_snippet(method, result, DB_CONFIG)
     while validation[0] is False:
         tries += 1
-        if tries > 3:
+        if tries > 5:
             print("LLM rewrite still unsuccessful, giving up...")
             return original_sql
         print("LLM rewrite unsuccessful, retrying...")
         print(f"Attempt {tries}")
+        print(f"Failed snippet: {result}")
         recovery_prompt = get_recovery_prompt(method, target_snippet,
                                               original_sql, result,
-                                              validation[1])
+                                              validation[1], schema_info)
         result = query_turbo_model(recovery_prompt)
         validation = validate_snippet(method, result, DB_CONFIG)
     print("LLM rewrite successful!")
@@ -173,6 +230,7 @@ def main(input_file, output_file, method="deepest_query_once"):
         csv_writer = csv.writer(f)
         csv_writer.writerow(["id", "original_sql", result_snippet])
 
+    schema_info = get_user_tables(DB_CONFIG)
     # 逐行处理并写入 CSV
     # i = 0
     for index, row in df.iterrows():
@@ -181,7 +239,7 @@ def main(input_file, output_file, method="deepest_query_once"):
         #    break
         snippet = row[target_snippet]
         original_sql = row["original_sql"]
-        complex_snippet = generate_complex_sql(method, snippet, original_sql)
+        complex_snippet = generate_complex_sql(method, snippet, original_sql, schema_info)
 
         # 打印输出
         print("original snippet:", snippet)
