@@ -17,6 +17,12 @@ Usage:
   in generator.py.
 
 To add a new method:
++ Add the scripts for locating and replacing
+  a snippet.
+  (Note: for the replacing script, the csv table
+   that this script creates must stores the updated
+   sql with the column name "updated_sql". Other names
+   such as "complex_sql" will not do.)
 + Add a list containing all 
   the instructions of this method's pipeline in 
   run_pipeline(). 

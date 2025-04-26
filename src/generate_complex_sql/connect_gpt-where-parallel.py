@@ -3,14 +3,13 @@ import os
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import csv
+import argparse
 
 
-os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890"
-os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890"
-
-# 设置 OpenAI API 连接
+# Initialize OpenAI client
 client = OpenAI(
-    api_key="your_api_key_here" 
+    api_key=os.environ.get("ARK_API_KEY"),
+    base_url="https://ark.cn-beijing.volces.com/api/v3",
 )
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -19,12 +18,10 @@ pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 def query_turbo_model(prompt):
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
-        model="gpt-3.5-turbo",
+        model="ep-20250208072708-5r255",
         temperature=0,
     )
     return chat_completion.choices[0].message.content
-
-
 
 def generate_complex_parallel_where_condition(simple_sql):
     prompt = f"""
@@ -46,36 +43,40 @@ Your output should:
 Original SQL: {simple_sql}
 Return only the rewritten complex WHERE clause below:
 """
-
     return query_turbo_model(prompt)
 
+def process_file(input_file, output_file):
+    df = pd.read_csv(input_file)
 
+    df = df.head(5)
 
-
-if __name__ == "__main__":
-    file_path = "../LLM-R2/data/data_llmr2/queries/queries_tpch_test.csv"  # llmr2中的查询作为模板
-    output_path = "./where_parallel_condition.csv"
-    
-    df = pd.read_csv(file_path)
-
-    # 创建 CSV 文件并写入表头
-    with open(output_path, 'w', newline='', encoding='utf-8') as f:
+    # Create CSV file with headers
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(["id", "original_sql", "complex_where_condition"])
 
-    # 逐行处理并写入 CSV
+    # Process each row
     for index, row in df.iterrows():
         simple_sql = row["original_sql"]
         complex_where = generate_complex_parallel_where_condition(simple_sql)
 
-        # 打印输出
         print("original SQL:", simple_sql)
         print("complex where condition:", complex_where)
         print("-" * 80)
 
-        # 写入 CSV
-        with open(output_path, 'a', newline='', encoding='utf-8') as f:
+        # Append to CSV
+        with open(output_file, 'a', newline='', encoding='utf-8') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow([index, simple_sql, complex_where])
 
-    print(f"The result has been saved to {output_path}")
+    print(f"Results saved to {output_file}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate complex parallel WHERE conditions for SQL queries')
+    parser.add_argument('-i', '--input', required=True, help='Input CSV file containing SQL queries')
+    parser.add_argument('-o', '--output', required=True, help='Output CSV file for complex WHERE conditions')
+
+    args = parser.parse_args()
+
+    process_file(args.input, args.output)

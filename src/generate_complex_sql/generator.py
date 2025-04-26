@@ -94,19 +94,47 @@ def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_o
         ]
     ]
 
+    cmd_where_parallel_once = [
+        # Step 1: Generate complex parallel WHERE conditions
+        [
+            "python3", "-u", "connect_gpt-where-parallel.py",
+            "-i", input_file,
+            "-o", f"{output_dir}/where_parallel_conditions.csv"
+        ],
+        # Step 2: Replace WHERE conditions in original SQL
+        [
+            "python3", "replace_where_condition.py",
+            "-i", f"{output_dir}/where_parallel_conditions.csv",
+            "-o", f"{output_dir}/complex_sql_where_parallel.csv"
+        ],
+        # Step 3: Filter correct SQL queries
+        [
+            "python3", "-u", "filter_correct_sql.py",
+            "-i", f"{output_dir}/complex_sql_where_parallel.csv",
+            "-o", f"{output_dir}/correct_complex_where_queries.csv"
+        ]
+    ]
+
     # The pipeline that allows for multiple rounds of
     # rewriting of the deepest subquery.
     cmd_deepest_query_multiple = copy.deepcopy(cmd_deepest_query_once)
     cmd_deepest_query_multiple[0][3] = f"{output_dir}/correct_deep_queries.csv"
 
-    pipelines = {"deepest_query_once": cmd_deepest_query_once,
-                 "deepest_query_multiple": cmd_deepest_query_multiple}
+    cmd_where_parallel_multiple = copy.deepcopy(cmd_where_parallel_once)
+    cmd_where_parallel_multiple[0][4] = f"{output_dir}\
+        /correct_complex_where_queries.csv"
 
-    if method == "deepest_query_multiple":
-        run_one_pipeline(cmd_deepest_query_once)
+    pipelines = {"deepest_query_once": cmd_deepest_query_once,
+                 "deepest_query_multiple": cmd_deepest_query_multiple,
+                 "parallel_where_once": cmd_where_parallel_once,
+                 "parallel_where_multiple": cmd_where_parallel_multiple}
+
+    if method in ["deepest_query_multiple", "parallel_where_multiple"]:
+        commands = pipelines[method]
+        run_one_pipeline(commands)
         for i in range(4):
             print(f"Iteration round {i}")
-            run_one_pipeline(cmd_deepest_query_multiple)
+            run_one_pipeline(commands)
         return
 
     run_one_pipeline(pipelines[method])

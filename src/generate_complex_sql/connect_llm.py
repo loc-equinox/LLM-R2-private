@@ -58,6 +58,7 @@ def get_user_tables(db_config: Dict) -> Dict[str, List[Tuple[str, str]]]:
 
     return result
 
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 
