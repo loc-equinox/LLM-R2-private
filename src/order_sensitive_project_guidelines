@@ -1,0 +1,24 @@
+Related files:
++ gen_order_sensitive_queries.py:
+Drives the whole process, runs explore_rule_pair.py with 
+arguments to test a specific pair.
+
++ explore_rule_pair.py:
+TODO: MODIFY THE PROMPT FOR BETTER EFFECTS
+Negotiates with LLM for a valid query.
+
++ all_sequences.py:
+Its core is the test_all_sequences() function, which
+takes in a list of rewrite rules and a query
+and enumerates all the rewrite orders.
+
+Usage:
++ Before running:
+    + Modify the OpenAI client in explore_rule_pair.py to use
+      your LLM.
+    + Modify DB_CONFIG in explre_rule_pair.py to connect to
+      your database instance. This is used to retrieve
+      the schema info of the database to assist the LLM.
++ run python3 gen_order_sensitive_queries.py
++ To test another set of rules, modify gen_order_sensitive
+  _queries.py's generate() function, see code for more details.

@@ -75,6 +75,7 @@ def call_rewriter(db_id, sql_input, rule_input):
         if 'select' in output or 'SELECT' in output or 'Select' in output:
             # change the functions edited to fit calcite back to original ones
             output = output.replace('SUBSTRING', 'SUBSTR')
+            output = output.replace('$', '')
             final_outputs.append(output)
         else:
             print(db_id)
@@ -121,4 +122,4 @@ def call_rewriter(db_id, sql_input, rule_input):
 #             return [root, left_subtree]
 
 
-print(call_rewriter(db_id, sql_input, rule_input))
+# print(call_rewriter(db_id, sql_input, rule_input))

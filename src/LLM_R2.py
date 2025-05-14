@@ -2,6 +2,7 @@
 # @AUTHOR : LZDH
 # @TIME : 9/5/23 4:07 PM
 # @AUTHOR : LZDH
+import os
 import random
 import pandas as pd
 import re
@@ -702,4 +703,10 @@ def LLM_R2(dataset, method, num_promos):
 method = 'random'
 dataset = 'dsb'
 num_promos = 1
-LLM_R2(dataset, method, num_promos)
+# LLM_R2(dataset, method, num_promos)
+
+print(agge_rewrite_rules)
+print(filt_rewrite_rules)
+print(join_rewrite_rules)
+print(sort_rewrite_rules)
+print(union_rewrite_rules)

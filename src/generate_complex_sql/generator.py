@@ -97,9 +97,10 @@ def run_pipeline(input_file: str, output_dir: str = ".", method="deepest_query_o
     cmd_where_parallel_once = [
         # Step 1: Generate complex parallel WHERE conditions
         [
-            "python3", "-u", "connect_gpt-where-parallel.py",
+            "python3", "-u", "connect_llm.py",
             "-i", input_file,
-            "-o", f"{output_dir}/where_parallel_conditions.csv"
+            "-o", f"{output_dir}/where_parallel_conditions.csv",
+            "-m", method
         ],
         # Step 2: Replace WHERE conditions in original SQL
         [

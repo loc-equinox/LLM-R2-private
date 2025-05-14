@@ -9,6 +9,7 @@ from generator import DB_CONFIG
 import psycopg2
 from psycopg2 import OperationalError
 from abc import ABC, abstractmethod
+from replace_where_condition import replace_where_in_ast
 
 # Base class for all generation methods
 class GenerateMethod(ABC):
@@ -31,10 +32,23 @@ class GenerateMethod(ABC):
                             schema_info: Dict) -> str:
         pass
 
+    def validate_snippet(self, snippet: str, db_config: Dict, original_sql) -> Tuple[bool, str]:
+        """Base validation method that handles database connection"""
+        validation_query = self.get_validation_query(snippet, original_sql)
+        try:
+            with psycopg2.connect(**db_config) as conn:
+                conn.autocommit = True
+                with conn.cursor() as cursor:
+                    cursor.execute(validation_query)
+                    return (True, "")
+        except psycopg2.Error as e:
+            return (False, str(e))
+        except OperationalError as e:
+            return (False, f"Connection error: {str(e)}")
+
     @abstractmethod
-    def validate_snippet(self, snippet: str, db_config: Dict)\
-            -> Tuple[bool, str]:
-        pass
+    def get_validation_query(self, snippet: str, original_sql) -> str:
+        """Return the validation query for the specific snippet type"""
 
     @property
     @abstractmethod
@@ -49,11 +63,15 @@ class GenerateMethod(ABC):
         )
         return chat_completion.choices[0].message.content
 
-    def generate_complex_sql(self, target_snippet: str, original_sql: str, schema_info: Dict) -> str:
-        initial_prompt = self.get_initial_prompt(target_snippet, original_sql, schema_info)
+    def generate_complex_sql(self, target_snippet: str, original_sql: str,
+                             schema_info: Dict) -> str:
+        initial_prompt = self.get_initial_prompt(target_snippet,
+                                                 original_sql, schema_info)
+        # print(initial_prompt)
+        print("Initial prompt obtained, querying the llm...")
         result = self.query_turbo_model(initial_prompt)
         tries = 0
-        validation = self.validate_snippet(result, DB_CONFIG)
+        validation = self.validate_snippet(result, DB_CONFIG, original_sql)
         
         while validation[0] is False:
             tries += 1
@@ -63,12 +81,14 @@ class GenerateMethod(ABC):
             print("LLM rewrite unsuccessful, retrying...")
             print(f"Attempt {tries}")
             print(f"Failed snippet: {result}")
+            print(f"Error message: {validation[1]}")
             recovery_prompt = self.get_recovery_prompt(
-                target_snippet, original_sql, result, validation[1], schema_info
+                target_snippet, original_sql, result,
+                validation[1], schema_info
             )
             result = self.query_turbo_model(recovery_prompt)
-            validation = self.validate_snippet(result, DB_CONFIG)
-        
+            validation = self.validate_snippet(result, DB_CONFIG, original_sql)
+
         print("LLM rewrite successful!")
         return result
 
@@ -100,7 +120,7 @@ Rewritten Complex Subquery:
 """
 
     def get_recovery_prompt(self, target_snippet: str, original_sql: str,
-                          error_snippet: str, error_msg: str, schema_info: Dict) -> str:
+                            error_snippet: str, error_msg: str, schema_info: Dict) -> str:
         return f"""
 You are a SQL expert. Please rewrite the provided subquery to make it significantly more complex.
 
@@ -138,19 +158,11 @@ Output Instructions:
 Rewritten Complex Subquery:
 """
 
-    def validate_snippet(self, snippet: str, db_config: Dict) -> Tuple[bool, str]:
+    def get_validation_query(self, snippet: str, original_sql) -> str:
+        """Return EXPLAIN query for validating subqueries"""
         if not snippet.endswith(';'):
             snippet = snippet + ';'
-        try:
-            with psycopg2.connect(**db_config) as conn:
-                conn.autocommit = True
-                with conn.cursor() as cursor:
-                    cursor.execute(f"EXPLAIN {snippet}")
-                    return (True, "")
-        except psycopg2.Error as e:
-            return (False, str(e))
-        except OperationalError as e:
-            return (False, f"Connection error: {str(e)}")
+        return f"EXPLAIN {snippet}"
 
     @property
     def snippet_column_names(self) -> Tuple[str, str]:
@@ -161,6 +173,8 @@ def get_method_instance(method_name: str) -> GenerateMethod:
     methods = {
         "deepest_query_once": DeepSubquery,
         "deepest_query_multiple": DeepSubquery,
+        "parallel_where_once": ParallelWhere,
+        "parallel_where_multiple": ParallelWhere
         # Add new methods here as they're implemented
     }
 
@@ -168,6 +182,88 @@ def get_method_instance(method_name: str) -> GenerateMethod:
         raise ValueError(f"Unknown method: {method_name}")
 
     return methods[method_name]()
+
+# Concrete implementation for parallel where-clause generation
+class ParallelWhere(GenerateMethod):
+    def get_initial_prompt(self, target_snippet: str, original_sql: str,
+                           schema_info: Dict) -> str:
+        return f"""
+You are a SQL expert. Based on the original SQL query below, generate a significantly more complex WHERE clause.
+
+The new WHERE clause should:
+- Only replace the WHERE clause from the original query (do NOT include SELECT or other clauses).
+- Contain a tree-like logical structure with multiple parallel branches using AND/OR combinations.
+- Include deeply nested subqueries (at least three levels).
+- Introduce multiple conditions involving multiple tables and attributes.
+- Avoid duplicating any part of the original WHERE clause.
+- Be syntactically correct and realistic in terms of table and column usage.
+- Each part of the WHERE clause should be longer and logically intricate, with nested subqueries and combined filters.
+
+Your output should:
+- Be a **single line** SQL `WHERE` clause starting with `WHERE ...`.
+- Not contain line breaks or any additional commentary—only the modified WHERE clause.
+
+Original SQL: {original_sql}
+Schemas in the database, for reference: {schema_info}
+
+Return only the rewritten complex WHERE clause below:
+"""
+
+    def get_recovery_prompt(self, target_snippet: str, original_sql: str,
+                            error_snippet: str, error_msg: str, schema_info: Dict) -> str:
+        return f"""
+You are a SQL expert. Based on the original SQL query below, generate a significantly more complex WHERE clause.
+
+The new WHERE clause should:
+- Only replace the WHERE clause from the original query (do NOT include SELECT or other clauses).
+- Contain a tree-like logical structure with multiple parallel branches using AND/OR combinations.
+- Include deeply nested subqueries (at least three levels).
+- Introduce multiple conditions involving multiple tables and attributes.
+- Avoid duplicating any part of the original WHERE clause.
+- Be syntactically correct and realistic in terms of table and column usage.
+- Each part of the WHERE clause should be longer and logically intricate, with nested subqueries and combined filters.
+
+Your output should:
+- Be a **single line** SQL `WHERE` clause starting with `WHERE ...`.
+- Not contain line breaks or any additional commentary—only the modified WHERE clause.
+
+Original SQL: {original_sql}
+
+Schemas in the database, for reference: {schema_info}
+
+Another SQL expert has tried to rewrite a where clause
+but failed. His attempt: {error_snippet}
+
+When placed back into the original query, this error message
+was generated: {error_msg}
+
+You should build upon his work and make the where-clause work, so please
+at least check that your response is DIFFERENT from his, since his
+attempt is obviously not correct.
+
+Also, you should make sure to take account of the error message
+generated for the previous faulty where-clause, and make sure you
+do not make the same mistakes.
+
+Return only the rewritten complex WHERE clause below:
+"""
+
+    def get_validation_query(self, snippet: str, original_sql) -> str:
+        """Return validation query for WHERE clauses"""
+        result = replace_where_in_ast(original_sql, snippet)
+        if not result.endswith(';'):
+            result = result + ';'
+        return result
+
+    @property
+    def snippet_column_names(self) -> Tuple[str, str]:
+        # Currently this rewrite method does not specify
+        # any where-clause that should be rewritten,
+        # therefore there is no "target_snippet", and
+        # the target_snippet variable will be ignored
+        # by ParallelWhere's get prompt functions.
+        # So we can set "original_sql" as the target.
+        return ("original_sql", "complex_where_condition")
 
 # Database utility functions
 def get_user_tables(db_config: Dict) -> Dict[str, List[Tuple[str, str]]]:
