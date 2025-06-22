@@ -2,7 +2,6 @@ import time
 from itertools import chain
 import subprocess
 from typing import List
-from explore_rule_pair import *
 
 aggregate_rewrite_rules = ["[AGGREGATE_EXPAND_DISTINCT_AGGREGATES: Rule that expands distinct aggregates (such as COUNT(DISTINCT x)) from a Aggregate]", "[AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN: As AGGREGATE_EXPAND_DISTINCT_AGGREGATES but generates a Join]", "[AGGREGATE_JOIN_TRANSPOSE_EXTENDED: As AGGREGATE_JOIN_TRANSPOSE, but extended to push down aggregate functions]", "[AGGREGATE_PROJECT_MERGE: Rule that recognizes an Aggregate on top of a Project and if possible aggregates through the Project or removes the Project]", "[AGGREGATE_ANY_PULL_UP_CONSTANTS: More general form of AGGREGATE_PROJECT_PULL_UP_CONSTANTS that matches any relational expression]", "[AGGREGATE_UNION_AGGREGATE: Rule that matches an Aggregate whose input is a Union one of whose inputs is an Aggregate]", "[AGGREGATE_UNION_TRANSPOSE: Rule that pushes an Aggregate past a non-distinct Union]", "[AGGREGATE_VALUES: Rule that applies an Aggregate to a Values (currently just an empty Values)]", "[AGGREGATE_REMOVE: Rule that removes an Aggregate if it computes no aggregate functions (that is, it is implementing SELECT DISTINCT), or all the aggregate functions are splittable, and the underlying relational expression is already distinct]"]
 filter_rewrite_rules = ["[FILTER_AGGREGATE_TRANSPOSE: Rule that pushes a Filter past an Aggregate]", "[FILTER_CORRELATE: Rule that pushes a Filter above a Correlate into the inputs of the Correlate]", "[FILTER_INTO_JOIN: Rule that tries to push filter expressions into a join condition and into the inputs of the join]", "[JOIN_CONDITION_PUSH: Rule that pushes predicates in a Join into the inputs to the join]", "[FILTER_MERGE: Rule that combines two LogicalFilters]", "[FILTER_MULTI_JOIN_MERGE: Rule that merges a Filter into a MultiJoin, creating a richer MultiJoin]", "[FILTER_PROJECT_TRANSPOSE: The default instance of FilterProjectTransposeRule]", "[FILTER_SET_OP_TRANSPOSE: Rule that pushes a Filter past a SetOp]", "[FILTER_TABLE_FUNCTION_TRANSPOSE: Rule that pushes a LogicalFilter past a LogicalTableFunctionScan]", "[FILTER_SCAN: Rule that matches a Filter on a TableScan]", "[FILTER_REDUCE_EXPRESSIONS: Rule that reduces constants inside a LogicalFilter]", "[PROJECT_REDUCE_EXPRESSIONS: Rule that reduces constants inside a LogicalProject]"]
@@ -61,8 +60,8 @@ def generate():
         ]
 
     # To test another rule pair, modify cmd[4] and cmd[6]
-    # cmd[4] = aggregate_rewrite_rules[2]
-    # cmd[6] = union_rewrite_rules[3]
+    cmd[4] = sort_rewrite_rules[2]
+    cmd[6] = union_rewrite_rules[3]
 
     if not run_command_with_realtime_output(cmd):
         print("\n\033[91mExploration failed!\033[0m")

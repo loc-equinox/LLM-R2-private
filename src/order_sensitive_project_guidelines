@@ -1,3 +1,5 @@
+Part 1: genearating queries that are sensitive to rewrite orders
+
 Related files:
 + gen_order_sensitive_queries.py:
 Drives the whole process, runs explore_rule_pair.py with 
@@ -16,9 +18,32 @@ Usage:
 + Before running:
     + Modify the OpenAI client in explore_rule_pair.py to use
       your LLM.
-    + Modify DB_CONFIG in explre_rule_pair.py to connect to
+    + Modify DB_CONFIG in explore_rule_pair.py to connect to
       your database instance. This is used to retrieve
       the schema info of the database to assist the LLM.
 + run python3 gen_order_sensitive_queries.py
 + To test another set of rules, modify gen_order_sensitive
   _queries.py's generate() function, see code for more details.
+
+Part 2: generating queries that can be effectively rewritten using
+	a given list of rules(Less strict than Part 1)
+
+Related files:
++ gen_order_specified_queries.py:
+Drives the whole process, runs explore_simple_rule_seq.py with 
+arguments to test a specific sequence.
+
++ explore_simple_rule_seq.py:
+TODO: MODIFY THE PROMPT FOR BETTER EFFECTS
+Negotiates with LLM for a valid query.
+
+Usage:
++ Before running:
+    + Modify the OpenAI client in explore_simple_rule_seq.py to use
+      your LLM.
+    + Modify DB_CONFIG in explore_simple_rule_seq.py to connect to
+      your database instance. This is used to retrieve
+      the schema info of the database to assist the LLM.
++ run python3 gen_order_specified_queries.py
++ To test another set of rules, modify gen_order_specified_
+  queries.py's generate() function, see code for more details.
