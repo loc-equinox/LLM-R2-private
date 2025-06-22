@@ -34074,3 +34074,805 @@ Was expecting one of:
 
 
 
+SELECT c.c_name, p.p_name, o.o_orderdate FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey JOIN (SELECT p.p_name, p.p_partkey FROM part p) p ON o.o_orderkey IN (SELECT l.l_orderkey FROM lineitem l WHERE l.l_partkey = p.p_partkey) ORDER BY c.c_name;
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" java.lang.NullPointerException
+	at java.base/java.util.Objects.requireNonNull(Objects.java:220)
+	at org.apache.calcite.sql2rel.SqlToRelConverter$Blackboard.convertExpression(SqlToRelConverter.java:5131)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertOnCondition(SqlToRelConverter.java:3114)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertJoin(SqlToRelConverter.java:3034)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertFrom(SqlToRelConverter.java:2245)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertFrom(SqlToRelConverter.java:2133)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertSelectImpl(SqlToRelConverter.java:683)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertSelect(SqlToRelConverter.java:664)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertQueryRecursive(SqlToRelConverter.java:3589)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery(SqlToRelConverter.java:589)
+	at org.apache.calcite.prepare.PlannerImpl.rel(PlannerImpl.java:259)
+	at main.Rewriter.SQL2RA(Rewriter.java:151)
+	at rule_rewriter.main(rule_rewriter.java:144)
+
+
+
+SELECT c.c_name, p.p_name, o.o_orderdate FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey JOIN (SELECT p.p_name, p.p_partkey FROM part p) p ON o.o_orderkey IN (SELECT l.l_orderkey FROM lineitem l WHERE l.l_partkey = p.p_partkey) ORDER BY c.c_name;
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" java.lang.NullPointerException
+	at java.base/java.util.Objects.requireNonNull(Objects.java:220)
+	at org.apache.calcite.sql2rel.SqlToRelConverter$Blackboard.convertExpression(SqlToRelConverter.java:5131)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertOnCondition(SqlToRelConverter.java:3114)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertJoin(SqlToRelConverter.java:3034)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertFrom(SqlToRelConverter.java:2245)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertFrom(SqlToRelConverter.java:2133)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertSelectImpl(SqlToRelConverter.java:683)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertSelect(SqlToRelConverter.java:664)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertQueryRecursive(SqlToRelConverter.java:3589)
+	at org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery(SqlToRelConverter.java:589)
+	at org.apache.calcite.prepare.PlannerImpl.rel(PlannerImpl.java:259)
+	at main.Rewriter.SQL2RA(Rewriter.java:151)
+	at rule_rewriter.main(rule_rewriter.java:144)
+
+
+
+SELECT p.p_name, s.s_name, (SELECT COUNT(*) FROM lineitem l WHERE l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey) AS count FROM (SELECT p1.p_name, p1.p_partkey FROM part p1) p JOIN (SELECT s1.s_name, s1.s_suppkey FROM supplier s1) s ON p.p_partkey = s.s_suppkey ORDER BY p.p_name, (SELECT COUNT(*) FROM lineitem l WHERE l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey)
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" org.apache.calcite.sql.parser.SqlParseException: Encountered "count" at line 1, column 127.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.convertException(SqlParserImpl.java:389)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.normalizeException(SqlParserImpl.java:153)
+	at org.apache.calcite.sql.parser.SqlParser.handleException(SqlParser.java:145)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:160)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+Caused by: org.apache.calcite.sql.parser.impl.ParseException: Encountered "count" at line 1, column 127.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.generateParseException(SqlParserImpl.java:37112)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.jj_consume_token(SqlParserImpl.java:36926)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:8520)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7829)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmt(SqlParserImpl.java:3790)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmtEof(SqlParserImpl.java:3828)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.parseSqlStmtEof(SqlParserImpl.java:201)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:158)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:268)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:153)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:78)
+
+
+
+SELECT p.p_name, s.s_name, (SELECT COUNT(*) FROM lineitem l WHERE l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey) AS count FROM (SELECT p1.p_name, p1.p_partkey FROM part p1) p JOIN (SELECT s1.s_name, s1.s_suppkey FROM supplier s1) s ON p.p_partkey = s.s_suppkey ORDER BY p.p_name, (SELECT COUNT(*) FROM lineitem l WHERE l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey)
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" org.apache.calcite.sql.parser.SqlParseException: Encountered "count" at line 1, column 127.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.convertException(SqlParserImpl.java:389)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.normalizeException(SqlParserImpl.java:153)
+	at org.apache.calcite.sql.parser.SqlParser.handleException(SqlParser.java:145)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:160)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+Caused by: org.apache.calcite.sql.parser.impl.ParseException: Encountered "count" at line 1, column 127.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.generateParseException(SqlParserImpl.java:37112)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.jj_consume_token(SqlParserImpl.java:36926)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:8520)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7829)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmt(SqlParserImpl.java:3790)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmtEof(SqlParserImpl.java:3828)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.parseSqlStmtEof(SqlParserImpl.java:201)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:158)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:268)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:153)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:78)
+
+
+
+SELECT p.p_name, (SELECT s.s_name FROM (SELECT s1.s_suppkey, s1.s_name FROM supplier s1) AS s JOIN (SELECT ps1.ps_partkey, ps1.ps_suppkey FROM partsupp ps1) AS ps ON s.s_suppkey = ps.ps_suppkey WHERE ps.ps_partkey = p.p_partkey) AS supplier_name FROM (SELECT p1.p_partkey, p1.p_name, (SELECT COUNT(*) AS count FROM lineitem l WHERE l.l_partkey = p1.p_partkey) AS lineitem_count FROM part p1) AS p JOIN (SELECT l1.l_quantity, l1.l_partkey, l1.l_suppkey FROM lineitem l1) AS l ON p.p_partkey = l.l_partkey ORDER BY (SELECT s.s_name FROM (SELECT s1.s_suppkey, s1.s_name FROM supplier s1) AS s JOIN (SELECT ps1.ps_partkey, ps1.ps_suppkey FROM partsupp ps1) AS ps ON s.s_suppkey = ps.ps_suppkey WHERE ps.ps_partkey = p.p_partkey)
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" org.apache.calcite.sql.parser.SqlParseException: Encountered "count" at line 1, column 305.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.convertException(SqlParserImpl.java:389)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.normalizeException(SqlParserImpl.java:153)
+	at org.apache.calcite.sql.parser.SqlParser.handleException(SqlParser.java:145)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:160)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+Caused by: org.apache.calcite.sql.parser.impl.ParseException: Encountered "count" at line 1, column 305.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.generateParseException(SqlParserImpl.java:37112)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.jj_consume_token(SqlParserImpl.java:36926)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:8520)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7816)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.ParenthesizedQueryOrCommaList(SqlParserImpl.java:713)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression3(SqlParserImpl.java:16537)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression2b(SqlParserImpl.java:16155)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression2(SqlParserImpl.java:16196)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression(SqlParserImpl.java:16126)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectExpression(SqlParserImpl.java:9002)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:7842)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7829)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.ParenthesizedExpression(SqlParserImpl.java:666)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.TableRef2(SqlParserImpl.java:9343)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.TableRef(SqlParserImpl.java:9268)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.FromClause(SqlParserImpl.java:9158)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4419)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmt(SqlParserImpl.java:3790)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmtEof(SqlParserImpl.java:3828)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.parseSqlStmtEof(SqlParserImpl.java:201)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:158)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:268)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:153)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:78)
+
+
+
+SELECT p.p_name, (SELECT s.s_name FROM (SELECT s1.s_suppkey, s1.s_name FROM supplier s1) AS s JOIN (SELECT ps1.ps_partkey, ps1.ps_suppkey FROM partsupp ps1) AS ps ON s.s_suppkey = ps.ps_suppkey WHERE ps.ps_partkey = p.p_partkey) AS supplier_name FROM (SELECT p1.p_partkey, p1.p_name, (SELECT COUNT(*) AS count FROM lineitem l WHERE l.l_partkey = p1.p_partkey) AS lineitem_count FROM part p1) AS p JOIN (SELECT l1.l_quantity, l1.l_partkey, l1.l_suppkey FROM lineitem l1) AS l ON p.p_partkey = l.l_partkey ORDER BY (SELECT s.s_name FROM (SELECT s1.s_suppkey, s1.s_name FROM supplier s1) AS s JOIN (SELECT ps1.ps_partkey, ps1.ps_suppkey FROM partsupp ps1) AS ps ON s.s_suppkey = ps.ps_suppkey WHERE ps.ps_partkey = p.p_partkey)
+src/rule_rewriter.java:49: warning: [unchecked] unchecked cast
+    List<String> input_rules = (List<String>) inputList.get(2);
+                                                           ^
+  required: List<String>
+  found:    Object
+1 warning
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:94: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type Map
+            tmp.put(((RelOptRule) k).toString(),node.activatedRules.get(k));
+                   ^
+  where K,V are type-variables:
+    K extends Object declared in interface Map
+    V extends Object declared in interface Map
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:112: warning: [unchecked] unchecked conversion
+        Collection<SqlKind> collection = new ArrayList();
+                                         ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:190: warning: [unchecked] unchecked conversion
+                Collection<SqlKind> collection = new ArrayList();
+                                                 ^
+  required: Collection<SqlKind>
+  found:    ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:315: warning: [unchecked] unchecked call to add(E) as a member of the raw type ArrayList
+                        resultList.add(m2.group(0));
+                                      ^
+  where E is a type-variable:
+    E extends Object declared in class ArrayList
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:343: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+            stack.add(rel_node);
+                     ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Utils.java:348: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+                    stack.add(node.getInputs().get(i));
+                             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+6 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:77: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:83: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:111: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+    stack.add(rel_node);
+             ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:115: warning: [unchecked] unchecked call to add(E) as a member of the raw type Deque
+        stack.add(node.getInputs().get(i));
+                 ^
+  where E is a type-variable:
+    E extends Object declared in interface Deque
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/Rewriter.java:167: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(1);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+5 warnings
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:133: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(finalNode);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:135: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(new_sql);
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+/Users/leshanchen/James/CS/lab_work/LLM-R2/LLM-R2/src/src/main/HepOpt.java:136: warning: [unchecked] unchecked call to add(E) as a member of the raw type List
+    res.add(this.hepPlanner.getRules());
+           ^
+  where E is a type-variable:
+    E extends Object declared in interface List
+3 warnings
+Exception in thread "main" org.apache.calcite.sql.parser.SqlParseException: Encountered "count" at line 1, column 305.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.convertException(SqlParserImpl.java:389)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.normalizeException(SqlParserImpl.java:153)
+	at org.apache.calcite.sql.parser.SqlParser.handleException(SqlParser.java:145)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:160)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+Caused by: org.apache.calcite.sql.parser.impl.ParseException: Encountered "count" at line 1, column 305.
+Was expecting one of:
+    <QUOTED_STRING> ...
+    <BRACKET_QUOTED_IDENTIFIER> ...
+    <QUOTED_IDENTIFIER> ...
+    <BACK_QUOTED_IDENTIFIER> ...
+    <BIG_QUERY_BACK_QUOTED_IDENTIFIER> ...
+    <HYPHENATED_IDENTIFIER> ...
+    <IDENTIFIER> ...
+    <UNICODE_QUOTED_IDENTIFIER> ...
+    
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.generateParseException(SqlParserImpl.java:37112)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.jj_consume_token(SqlParserImpl.java:36926)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:8520)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7816)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.ParenthesizedQueryOrCommaList(SqlParserImpl.java:713)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression3(SqlParserImpl.java:16537)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression2b(SqlParserImpl.java:16155)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression2(SqlParserImpl.java:16196)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.Expression(SqlParserImpl.java:16126)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectExpression(SqlParserImpl.java:9002)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectItem(SqlParserImpl.java:7842)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SelectList(SqlParserImpl.java:7829)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4415)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.ParenthesizedExpression(SqlParserImpl.java:666)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.TableRef2(SqlParserImpl.java:9343)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.TableRef(SqlParserImpl.java:9268)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.FromClause(SqlParserImpl.java:9158)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlSelect(SqlParserImpl.java:4419)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQuery(SqlParserImpl.java:631)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.LeafQueryOrExpr(SqlParserImpl.java:16109)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.QueryOrExpr(SqlParserImpl.java:15557)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.OrderedQueryOrExpr(SqlParserImpl.java:505)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmt(SqlParserImpl.java:3790)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.SqlStmtEof(SqlParserImpl.java:3828)
+	at org.apache.calcite.sql.parser.impl.SqlParserImpl.parseSqlStmtEof(SqlParserImpl.java:201)
+	at org.apache.calcite.sql.parser.SqlParser.parseQuery(SqlParser.java:158)
+	at org.apache.calcite.sql.parser.SqlParser.parseStmt(SqlParser.java:185)
+	at org.apache.calcite.prepare.PlannerImpl.parse(PlannerImpl.java:214)
+	at main.Rewriter.SQL2RA(Rewriter.java:148)
+	at rule_rewriter.main(rule_rewriter.java:144)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:268)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:153)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:78)
+
+
+

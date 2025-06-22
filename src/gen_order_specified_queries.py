@@ -9,7 +9,7 @@ from gen_order_sensitive_queries import aggregate_rewrite_rules, \
 def generate():
     # To construct the rule_sequence string, separate the
     # rewrite rules with semicolons
-    rule_seq = filter_rewrite_rules[3] + ";" + sort_rewrite_rules[1]
+    rule_seq = join_rewrite_rules[3] + ";" + sort_rewrite_rules[1]
     cmd = \
         [
             "python3", "-u", "explore_simple_rule_seq.py",

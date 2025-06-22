@@ -10,6 +10,7 @@ import sys
 sys.path.append("generate_complex_sql")
 from connect_llm import get_user_tables
 from rewriter import call_rewriter
+from compare_plans import plan_similarity
 
 DB_CONFIG = {
     "dbname": "tpch",
@@ -135,17 +136,22 @@ def check_valid(rule_list, query: str):
     for r in intermediate_results:
         # The syntax is guaranteed to be correct in this case,
         # and we use check_query_syntax to obtain the plan
-        plan = check_query_syntax(r, DB_CONFIG)[1]
-        intermediate_plans.append(plan)
+        syntax_check = check_query_syntax(r, DB_CONFIG)
+        if syntax_check[0] is False:
+            print("Syntax error")
+            print(syntax_check[1])
+            log += "Syntax error\n" + syntax_check[1]
+            return log
+        intermediate_plans.append(syntax_check[1])
     similarity = []
     for i in range(len(intermediate_plans) - 1):
         p1 = intermediate_plans[i]
         p2 = intermediate_plans[i + 1]
-        similarity.append(SequenceMatcher(None, p1, p2).ratio())
+        similarity.append(plan_similarity(p1, p2))
     print(intermediate_plans)
     print(similarity)
     for s in similarity:
-        if s > 0.99:
+        if s > 0.7:
             log += "Some rewrite rule had no effect\n" \
                    + rewrite_result + "\n"
             return log
@@ -160,7 +166,11 @@ def check_query_syntax(query: str, db_config: Dict) -> Tuple[bool, str]:
             with conn.cursor() as cursor:
                 cursor.execute("EXPLAIN " + query)
                 query_plan = cursor.fetchall()
-                return (True, query_plan)
+                plan_str = " ".join(line[0]
+                                    .replace("\n", " ")
+                                    .strip()
+                                    for line in query_plan)
+                return (True, plan_str)
     except psycopg2.Error as e:
         return (False, str(e))
     except OperationalError as e:
