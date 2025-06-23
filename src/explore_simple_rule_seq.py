@@ -20,18 +20,16 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-client = OpenAI(
-    api_key=os.environ.get("ARK_API_KEY"),
-    base_url="https://ark.cn-beijing.volces.com/api/v3",
-)
+client = OpenAI(api_key="sk-68a00656b0e049c48878e8a13144c7ac", base_url="https://api.deepseek.com")
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def query_LLM(prompt):
     chat_completion = client.chat.completions.create(
-        model="ep-20250208072708-5r255",
+        model="deepseek-chat",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0,
+        temperature=0.5,
     )
     return chat_completion.choices[0].message.content
 
@@ -148,10 +146,10 @@ def check_valid(rule_list, query: str):
         p1 = intermediate_plans[i]
         p2 = intermediate_plans[i + 1]
         similarity.append(plan_similarity(p1, p2))
-    print(intermediate_plans)
+    # print(intermediate_plans)
     print(similarity)
     for s in similarity:
-        if s > 0.7:
+        if s > 0.99:
             log += "Some rewrite rule had no effect\n" \
                    + rewrite_result + "\n"
             return log
@@ -225,6 +223,9 @@ def main(rules: str):
     else:
         print("Exploration succeeded, valid query:")
         print(attempt)
+        with open('results.txt', 'a') as file:
+            file.write(str(rule_list))
+            file.write("\n" + attempt + "\n")
 
 
 if __name__ == "__main__":
