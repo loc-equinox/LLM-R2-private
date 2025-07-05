@@ -10,7 +10,7 @@ import sys
 sys.path.append("generate_complex_sql")
 from connect_llm import get_user_tables
 from rewriter import call_rewriter
-from compare_plans import plan_similarity
+from compare_plans import plan_similarity, plan_is_effective
 
 DB_CONFIG = {
     "dbname": "tpch",
@@ -20,10 +20,7 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-client = OpenAI(api_key="sk-68a00656b0e049c48878e8a13144c7ac", base_url="https://api.deepseek.com")
-
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-# pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
+client = OpenAI(api_key="sk-ec743c1fbdc146b4824a10cf521f6e4a", base_url="https://api.deepseek.com")
 
 def query_LLM(prompt):
     chat_completion = client.chat.completions.create(
@@ -141,6 +138,13 @@ def check_valid(rule_list, query: str):
             log += "Syntax error\n" + syntax_check[1]
             return log
         intermediate_plans.append(syntax_check[1])
+
+    if not plan_is_effective(intermediate_plans[0], intermediate_plans[-1]):
+        plan_similarity(intermediate_plans[0], intermediate_plans[-1])
+        print("The overall cost went up.")
+        log += "The overall cost went up.\n"
+        return log
+
     similarity = []
     for i in range(len(intermediate_plans) - 1):
         p1 = intermediate_plans[i]
@@ -153,6 +157,7 @@ def check_valid(rule_list, query: str):
             log += "Some rewrite rule had no effect\n" \
                    + rewrite_result + "\n"
             return log
+
 
     return "success"
 

@@ -65,3 +65,31 @@ def plan_similarity(plan1, plan2):
     c2 = get_plan_cost_string(plan2)
     print(c1, c2)
     return SequenceMatcher(None, c1, c2).ratio()
+
+def is_cost_lower(cost_str1, cost_str2):
+    """
+    Compare two query plan cost strings and determine if the second cost is lower than the first.
+    
+    Args:
+        cost_str1: First cost string in format "start1..end1"
+        cost_str2: Second cost string in format "start2..end2"
+        
+    Returns:
+        bool: True if cost_str2 represents a lower cost than cost_str1, False otherwise
+    """
+    def parse_cost(cost_str):
+        """Helper function to parse cost string into numeric values"""
+        start, end = cost_str.split('..')
+        return float(start), float(end)
+    
+    # Parse both cost strings
+    start1, end1 = parse_cost(cost_str1)
+    start2, end2 = parse_cost(cost_str2)
+    return end2 < end1
+
+
+def plan_is_effective(plan1, plan2):
+    """Calculate whether the plan2 has a lower cost than plan1"""
+    c1 = get_plan_cost_string(plan1)
+    c2 = get_plan_cost_string(plan2)
+    return is_cost_lower(c1, c2)
