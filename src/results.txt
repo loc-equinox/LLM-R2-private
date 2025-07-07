@@ -1,152 +1,82 @@
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION (SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT l_orderkey) FROM lineitem) UNION ALL SELECT COUNT(DISTINCT s_suppkey) FROM supplier
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_MERGE']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION ALL SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT l_orderkey) FROM lineitem
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_orderkey), SUM(DISTINCT o_totalprice) FROM orders WHERE o_orderpriority = '1-URGENT' UNION (SELECT COUNT(DISTINCT l_orderkey), SUM(DISTINCT l_extendedprice) FROM lineitem WHERE l_shipmode = 'AIR' UNION SELECT COUNT(DISTINCT c_custkey), SUM(DISTINCT c_acctbal) FROM customer WHERE c_mktsegment = 'BUILDING') UNION ALL SELECT COUNT(DISTINCT p_partkey), SUM(DISTINCT p_retailprice) FROM part WHERE p_type LIKE '%COPPER%'
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'UNION_MERGE']
-SELECT COUNT(DISTINCT l_orderkey), SUM(DISTINCT l_quantity) FROM lineitem UNION SELECT COUNT(DISTINCT p_partkey), SUM(DISTINCT p_retailprice) FROM part UNION SELECT COUNT(DISTINCT s_suppkey), SUM(DISTINCT s_acctbal) FROM supplier
-['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_MERGE']
-SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey GROUP BY l_returnflag UNION SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey GROUP BY l_linestatus UNION SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey GROUP BY l_returnflag, l_linestatus
-['AGGREGATE_ANY_PULL_UP_CONSTANTS', 'UNION_MERGE']
-SELECT c.c_name FROM customer c WHERE c.c_custkey IN (SELECT o.o_custkey FROM orders o WHERE o.o_totalprice > 1000 UNION SELECT o.o_custkey FROM orders o WHERE o.o_orderdate > DATE '1995-01-01') UNION SELECT c.c_name FROM customer c WHERE c.c_custkey IN (SELECT o.o_custkey FROM orders o WHERE o.o_totalprice > 500 UNION SELECT o.o_custkey FROM orders o WHERE o.o_orderdate > DATE '1994-01-01') UNION SELECT c.c_name FROM customer c WHERE c.c_custkey IN (SELECT o.o_custkey FROM orders o WHERE o.o_totalprice > 2000 UNION SELECT o.o_custkey FROM orders o WHERE o.o_orderdate > DATE '1996-01-01')
-['UNION_MERGE', 'AGGREGATE_UNION_TRANSPOSE']
-SELECT c_name FROM (SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_totalprice > 10000) UNION ALL SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderpriority = '1-URGENT' UNION ALL SELECT o_custkey FROM orders WHERE o_orderdate < '1995-01-01')) t GROUP BY c_name
-['AGGREGATE_UNION_TRANSPOSE', 'UNION_MERGE']
-SELECT SUM(ps_supplycost) FROM (SELECT ps_supplycost FROM partsupp WHERE ps_partkey < 100 UNION SELECT ps_supplycost FROM partsupp WHERE ps_suppkey > 500 UNION SELECT ps_supplycost FROM partsupp WHERE ps_availqty < 10) t GROUP BY ps_supplycost
-['AGGREGATE_REMOVE', 'UNION_MERGE']
-SELECT DISTINCT c_name FROM customer UNION SELECT n_name FROM nation UNION SELECT r_name FROM region
-['UNION_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION ALL (SELECT COUNT(DISTINCT c_custkey) FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT COUNT(DISTINCT c_custkey) FROM customer WHERE c_mktsegment = 'BUILDING')
-['UNION_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_orderkey), SUM(DISTINCT o_totalprice) FROM orders UNION SELECT COUNT(DISTINCT o_orderkey), SUM(DISTINCT o_totalprice) FROM orders WHERE o_custkey < 10 UNION SELECT COUNT(DISTINCT o_orderkey), SUM(DISTINCT o_totalprice) FROM orders WHERE o_custkey > 1000
-['UNION_TO_DISTINCT', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT s_suppkey) FROM supplier
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_TO_DISTINCT']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer
-['UNION_TO_DISTINCT', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT c_name), SUM(DISTINCT c_acctbal) FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT COUNT(DISTINCT n_name), SUM(DISTINCT n_regionkey) FROM nation WHERE n_name = 'CANADA'
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'UNION_TO_DISTINCT']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer
-['UNION_TO_DISTINCT', 'AGGREGATE_ANY_PULL_UP_CONSTANTS']
-SELECT c_name, 100 AS constant FROM customer WHERE c_acctbal > 1000 UNION SELECT n_name, 100 FROM nation WHERE n_regionkey = 1
-['AGGREGATE_ANY_PULL_UP_CONSTANTS', 'UNION_TO_DISTINCT']
-SELECT SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM (SELECT l_extendedprice, l_discount FROM lineitem, part WHERE l_partkey = p_partkey AND p_brand = 'Brand#12' AND p_container IN ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG') UNION SELECT l_extendedprice, l_discount FROM lineitem, part WHERE l_partkey = p_partkey AND p_brand = 'Brand#23' AND p_container IN ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG')) AS t
-['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
-SELECT c_name FROM (SELECT c_name FROM customer WHERE c_nationkey = 1 UNION SELECT c_name FROM customer WHERE c_mktsegment = 'AUTOMOBILE' GROUP BY c_name) AS subq GROUP BY c_name
-['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
-SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice FROM lineitem WHERE l_shipdate > '1998-12-01' UNION SELECT l_extendedprice FROM (SELECT l_extendedprice FROM lineitem WHERE l_returnflag = 'R' GROUP BY l_extendedprice) t1) t2 GROUP BY l_extendedprice
-['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
-SELECT COUNT(*) FROM (SELECT c_custkey FROM customer UNION SELECT n_nationkey FROM nation) t
-['AGGREGATE_UNION_TRANSPOSE', 'UNION_TO_DISTINCT']
-SELECT COUNT(*) FROM (SELECT c_custkey FROM customer WHERE c_nationkey = 1 UNION SELECT o_custkey FROM orders WHERE o_orderdate < '1995-01-01' UNION SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE') AS t
-['AGGREGATE_VALUES', 'UNION_TO_DISTINCT']
-SELECT (SELECT COUNT(*) FROM (VALUES (1), (2), (3)) AS t) UNION SELECT COUNT(*) FROM (SELECT c_name FROM customer UNION SELECT n_name FROM nation) AS subq
-['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
-SELECT DISTINCT c_name FROM (SELECT c_name FROM customer GROUP BY c_name UNION SELECT n_name FROM nation GROUP BY n_name) AS subq
-['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice > 1000 UNION SELECT 0 AS o_custkey FROM orders WHERE o_orderkey = 1) GROUP BY c_name HAVING COUNT(DISTINCT c_address) > (SELECT COUNT(DISTINCT n_nationkey) FROM nation WHERE n_name = 'UNITED STATES')
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT c_custkey) FROM (SELECT c_custkey FROM customer WHERE c_acctbal > 5000 UNION SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT c_custkey FROM customer WHERE c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_name = 'UNITED STATES')) AS subquery
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_MERGE']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT l_orderkey) FROM lineitem
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT DISTINCT COUNT(DISTINCT o_orderkey), SUM(DISTINCT o_totalprice) FROM orders UNION SELECT COUNT(DISTINCT l_orderkey), SUM(DISTINCT l_extendedprice) FROM lineitem WHERE l_quantity > 10 UNION (SELECT COUNT(DISTINCT ps_partkey), SUM(DISTINCT ps_supplycost) FROM partsupp UNION SELECT COUNT(DISTINCT p_partkey), SUM(DISTINCT p_retailprice) FROM part)
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'UNION_MERGE']
-SELECT COUNT(DISTINCT l_orderkey), SUM(DISTINCT l_quantity) FROM lineitem UNION SELECT COUNT(DISTINCT p_partkey), SUM(DISTINCT p_retailprice) FROM part UNION SELECT COUNT(DISTINCT s_suppkey), SUM(DISTINCT s_acctbal) FROM supplier
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT ps_partkey) FROM (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 100 UNION (SELECT ps_partkey FROM partsupp WHERE ps_availqty > 50 UNION SELECT ps_partkey FROM partsupp WHERE ps_suppkey IN (SELECT s_suppkey FROM supplier WHERE s_nationkey = 1))) t
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_MERGE']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT l_orderkey) FROM lineitem
-['UNION_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT c_name FROM customer UNION ALL SELECT n_name FROM nation UNION ALL SELECT r_name FROM region UNION ALL SELECT s_name FROM supplier WHERE s_acctbal > (SELECT AVG(l_quantity) FROM lineitem WHERE l_discount < 0.05 AND l_partkey IN (SELECT l_partkey FROM lineitem GROUP BY l_partkey HAVING COUNT(DISTINCT l_suppkey) > 2))
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'UNION_MERGE']
-SELECT COUNT(DISTINCT o_custkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT c_custkey) FROM customer WHERE c_acctbal > 1000
-['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_MERGE']
-SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey JOIN customer ON o_custkey = c_custkey GROUP BY c_nationkey UNION SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey JOIN customer ON o_custkey = c_custkey GROUP BY c_mktsegment UNION SELECT SUM(l_extendedprice) FROM lineitem JOIN orders ON l_orderkey = o_orderkey JOIN customer ON o_custkey = c_custkey GROUP BY c_nationkey
-['UNION_MERGE', 'AGGREGATE_UNION_TRANSPOSE']
-SELECT c_name FROM (SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_totalprice > 1000) UNION ALL SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM (SELECT o_custkey FROM orders WHERE o_orderpriority = '1-URGENT' UNION ALL SELECT o_custkey FROM orders WHERE o_clerk LIKE 'Clerk%') AS t)) AS t GROUP BY c_name
-['AGGREGATE_REMOVE', 'UNION_MERGE']
-SELECT DISTINCT c_name FROM customer UNION SELECT n_name FROM nation UNION SELECT r_name FROM region
-['UNION_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT c_custkey) FROM customer UNION (SELECT COUNT(DISTINCT s_suppkey) FROM supplier WHERE s_acctbal > 0) UNION (SELECT COUNT(DISTINCT n_nationkey) FROM nation)
-['UNION_TO_DISTINCT', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT c_custkey) FROM customer UNION SELECT COUNT(DISTINCT s_suppkey) FROM supplier
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_TO_DISTINCT']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT l_orderkey) FROM lineitem
-['UNION_TO_DISTINCT', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT l_partkey), SUM(DISTINCT l_suppkey) FROM lineitem WHERE l_quantity > 10 UNION SELECT COUNT(DISTINCT ps_partkey), SUM(DISTINCT ps_suppkey) FROM partsupp WHERE ps_availqty > 5
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'UNION_TO_DISTINCT']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders UNION SELECT COUNT(DISTINCT c_custkey) FROM customer
-['AGGREGATE_PROJECT_MERGE', 'UNION_TO_DISTINCT']
-SELECT SUM(ps_supplycost) FROM (SELECT ps_supplycost FROM partsupp WHERE ps_availqty > 50 UNION SELECT ps_supplycost FROM partsupp WHERE ps_partkey IN (SELECT p_partkey FROM part WHERE p_size > 10)) AS subquery
-['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
-SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT DISTINCT ps_suppkey FROM partsupp WHERE ps_availqty > 100 UNION SELECT l_suppkey FROM lineitem WHERE l_extendedprice > 5000)
-['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
-SELECT SUM(c_acctbal) FROM (SELECT c_acctbal FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT c_acctbal FROM customer WHERE c_mktsegment = 'BUILDING' UNION SELECT c_acctbal FROM customer WHERE c_mktsegment = 'FURNITURE') t
-['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
-SELECT COUNT(*) FROM (SELECT c_name FROM customer UNION SELECT n_name FROM nation) t
-['AGGREGATE_UNION_TRANSPOSE', 'UNION_TO_DISTINCT']
-SELECT SUM(ps_supplycost) FROM (SELECT ps_supplycost FROM partsupp WHERE ps_availqty > 50 UNION SELECT ps_supplycost FROM partsupp WHERE ps_partkey IN (SELECT p_partkey FROM part WHERE p_size > 10)) t
-['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
-SELECT DISTINCT c_name FROM customer UNION SELECT DISTINCT s_name FROM supplier WHERE s_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 1)
-['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT c_custkey) FROM customer UNION ALL SELECT 1 FROM customer WHERE c_custkey IS NULL UNION ALL SELECT 2 FROM customer WHERE c_custkey IS NOT NULL
-['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT 100 AS o_custkey) AND c_acctbal > (SELECT AVG(DISTINCT l_quantity) FROM lineitem, orders WHERE l_orderkey = orders.o_orderkey)
-['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_REMOVE']
-SELECT c_name FROM (SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderstatus = 'F' UNION SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTO') AND c_nationkey = 1 UNION SELECT 'Special Customer' AS c_name FROM customer WHERE c_custkey = 0) AS t GROUP BY c_name
-['FILTER_CORRELATE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AND o_totalprice > 50000
-['FILTER_CORRELATE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AND o_totalprice > 50000
-['JOIN_CONDITION_PUSH', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT l_orderkey) FROM lineitem JOIN orders ON l_orderkey = o_orderkey JOIN customer ON o_custkey = c_custkey WHERE l_quantity > 10 AND o_totalprice < 5000 AND c_acctbal > 1000 AND c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_name = 'CANADA')
-['FILTER_MERGE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_custkey), SUM(DISTINCT l_quantity) FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE o_orderdate > DATE '1995-01-01' AND l_discount < 0.05 AND o_orderstatus = 'F' AND l_shipmode = 'AIR' AND o_totalprice > 1000 AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE')
-['FILTER_PROJECT_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM (SELECT o_orderkey, o_totalprice FROM orders WHERE o_orderdate > DATE '1995-01-01') AS subq WHERE o_totalprice > 1000 AND o_orderkey IN (SELECT l_orderkey FROM lineitem WHERE l_quantity > 10)
-['FILTER_PROJECT_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT DISTINCT l.l_orderkey FROM lineitem l JOIN orders o ON l.l_orderkey = o.o_orderkey WHERE l.l_quantity > 10 AND o.o_totalprice > 1000 GROUP BY l.l_orderkey HAVING COUNT(DISTINCT l.l_partkey) > 2
-['FILTER_SET_OP_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM (SELECT o_orderkey FROM orders WHERE o_orderdate > '1995-01-01' UNION ALL SELECT l_orderkey FROM lineitem WHERE l_shipdate > '1995-01-01') t WHERE o_orderkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000)
-['FILTER_SET_OP_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_custkey) FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT COUNT(DISTINCT c_custkey) FROM customer WHERE c_acctbal > 1000 AND c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_name = 'UNITED STATES')
-['AGGREGATE_UNION_AGGREGATE', 'FILTER_SET_OP_TRANSPOSE']
-SELECT SUM(l_quantity) FROM (SELECT l_quantity FROM lineitem WHERE l_shipdate > '1998-12-01' UNION ALL SELECT l_quantity FROM (SELECT l_quantity FROM lineitem WHERE l_returnflag = 'R' GROUP BY l_quantity) t1 WHERE l_quantity > 20) t2 WHERE l_quantity < 100 GROUP BY l_quantity HAVING SUM(l_quantity) > 50
-['FILTER_SET_OP_TRANSPOSE', 'AGGREGATE_REMOVE']
-SELECT DISTINCT c_name FROM customer WHERE c_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000 INTERSECT SELECT o_custkey FROM orders WHERE o_totalprice > 50000) AND c_nationkey = 15
-['FILTER_TABLE_FUNCTION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders, LATERAL (SELECT * FROM lineitem WHERE l_orderkey = o_orderkey AND l_shipdate > '1995-01-01') AS li WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_nationkey = 1)
-['FILTER_TABLE_FUNCTION_TRANSPOSE', 'AGGREGATE_UNION_TRANSPOSE']
-SELECT COUNT(*) FROM (SELECT c_custkey FROM customer WHERE c_acctbal > 1000 UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice < 5000) t GROUP BY c_custkey HAVING c_custkey > 100 AND COUNT(*) > (SELECT COUNT(*) FROM lineitem WHERE l_quantity > 30)
-['FILTER_TABLE_FUNCTION_TRANSPOSE', 'AGGREGATE_REMOVE']
-SELECT DISTINCT c_name FROM (SELECT c_name, c_custkey, c_mktsegment FROM customer WHERE c_mktsegment = 'AUTOMOBILE') AS filtered_customers WHERE c_custkey IN (SELECT o_custkey FROM (SELECT o_custkey FROM orders WHERE o_orderdate > DATE '1995-01-01') AS recent_orders GROUP BY o_custkey)
-['FILTER_SCAN', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderdate > '1995-01-01' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'BUILDING')
-['FILTER_SCAN', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT o_custkey), SUM(DISTINCT o_totalprice) FROM orders WHERE o_orderdate > '1995-01-01' AND o_orderpriority = '1-URGENT' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 5000)
-['FILTER_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT COUNT(DISTINCT c_custkey) FROM customer WHERE c_acctbal > 1000 AND (5-3=2 OR c_mktsegment = 'AUTOMOBILE') AND (c_nationkey = 1 OR c_nationkey = 2)
-['AGGREGATE_ANY_PULL_UP_CONSTANTS', 'FILTER_REDUCE_EXPRESSIONS']
-SELECT SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM lineitem, part WHERE l_partkey = p_partkey AND p_brand = 'Brand#12' AND p_container IN ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG') AND l_quantity >= 10 AND l_quantity <= 20 AND p_size BETWEEN 1 AND 5 AND l_shipmode IN ('AIR', 'AIR REG') AND l_shipinstruct = 'DELIVER IN PERSON' OR (l_shipmode = 'AIR' AND l_shipinstruct = 'DELIVER IN PERSON' AND p_brand = 'Brand#12' AND p_container = 'SM CASE') GROUP BY l_returnflag
-['PROJECT_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_orderkey) + (5 * 2) FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000)
-['PROJECT_REDUCE_EXPRESSIONS', 'AGGREGATE_REMOVE']
-SELECT DISTINCT p_name, (10/2) + 1 FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 10 GROUP BY ps_partkey HAVING COUNT(*) > 2)
+['SORT_JOIN_TRANSPOSE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT c_name FROM (SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' ORDER BY o_orderdate) UNION ALL SELECT c_name FROM customer WHERE c_acctbal < 0) t GROUP BY c_name ORDER BY c_name
 ['SORT_PROJECT_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_custkey) FROM (SELECT o_custkey, o_orderdate FROM orders ORDER BY o_orderdate) t
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'SORT_PROJECT_TRANSPOSE']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders GROUP BY o_custkey ORDER BY o_custkey
+SELECT COUNT(DISTINCT o_orderkey) FROM (SELECT o_orderkey, o_orderdate FROM orders ORDER BY o_orderdate) t
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN', 'SORT_PROJECT_TRANSPOSE']
+SELECT SUM(l_quantity) AS total_quantity, COUNT(DISTINCT l_partkey) FROM lineitem WHERE l_shipdate > '1995-01-01' GROUP BY l_orderkey ORDER BY l_orderkey
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'SORT_PROJECT_TRANSPOSE']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey ORDER BY l_returnflag) AS t GROUP BY l_returnflag ORDER BY l_returnflag
 ['AGGREGATE_PROJECT_MERGE', 'SORT_PROJECT_TRANSPOSE']
-SELECT SUM(l_extendedprice * (1 - l_discount)) FROM (SELECT l_extendedprice, l_discount FROM lineitem ORDER BY l_partkey) AS t GROUP BY l_discount ORDER BY l_discount
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem WHERE l_shipdate >= DATE '1994-01-01' ORDER BY l_shipdate) t GROUP BY l_returnflag ORDER BY l_returnflag
+['AGGREGATE_ANY_PULL_UP_CONSTANTS', 'SORT_PROJECT_TRANSPOSE']
+SELECT SUM(l_extendedprice * (1 - l_discount)) AS revenue, 1 AS const FROM lineitem WHERE l_shipdate >= DATE '1994-01-01' AND l_shipdate < DATE '1995-01-01' GROUP BY l_returnflag, l_linestatus, const ORDER BY const, l_returnflag, l_linestatus
+['AGGREGATE_UNION_TRANSPOSE', 'SORT_PROJECT_TRANSPOSE']
+SELECT SUM(l_quantity) FROM (SELECT l_quantity FROM lineitem UNION ALL SELECT l_quantity FROM lineitem) t GROUP BY l_quantity ORDER BY l_quantity
+['AGGREGATE_VALUES', 'SORT_PROJECT_TRANSPOSE']
+SELECT n_name FROM (SELECT n_name, n_regionkey FROM nation WHERE n_regionkey = 1 ORDER BY n_name) AS subq WHERE n_regionkey > 0 ORDER BY n_regionkey
 ['SORT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT n_nationkey) FROM (SELECT n_nationkey FROM nation UNION SELECT s_nationkey FROM supplier ORDER BY n_nationkey) AS t ORDER BY 1
-['SORT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
-SELECT DISTINCT COUNT(DISTINCT l_orderkey), SUM(l_quantity) FROM (SELECT l_orderkey, l_quantity FROM lineitem WHERE l_shipdate > '1995-01-01' UNION SELECT l_orderkey, l_quantity FROM lineitem WHERE l_returnflag = 'R' ORDER BY l_orderkey) t
-['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'SORT_REMOVE_CONSTANT_KEYS']
-SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN customer ON o_custkey = c_custkey WHERE c_nationkey = 1 GROUP BY c_nationkey ORDER BY c_nationkey
+SELECT COUNT(DISTINCT l_orderkey) FROM (SELECT l_orderkey FROM lineitem WHERE l_quantity > 10 UNION ALL SELECT o_orderkey FROM orders WHERE o_totalprice > 1000 ORDER BY l_orderkey) AS subquery
+['SORT_UNION_TRANSPOSE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT c_name FROM customer UNION ALL SELECT n_name FROM nation ORDER BY c_name) t
 ['AGGREGATE_ANY_PULL_UP_CONSTANTS', 'SORT_REMOVE_CONSTANT_KEYS']
-SELECT SUM(l_quantity) as total_qty, COUNT(*) as cnt, 1 as const FROM lineitem WHERE l_orderkey = 1 GROUP BY l_partkey ORDER BY const, l_partkey
-['SORT_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
-SELECT COUNT(DISTINCT o_custkey) FROM (SELECT o_custkey FROM orders ORDER BY o_custkey) t
+SELECT SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM lineitem, orders, customer, nation, region WHERE c_custkey = o_custkey AND l_orderkey = o_orderkey AND c_nationkey = n_nationkey AND n_regionkey = r_regionkey AND r_name = 'ASIA' AND o_orderdate >= DATE '1994-01-01' AND o_orderdate < DATE '1995-01-01' GROUP BY n_name, 1+0 ORDER BY n_name, 1+0
+['FILTER_PROJECT_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT DISTINCT COUNT(DISTINCT o.o_orderkey), SUM(l.l_quantity) FROM orders o JOIN lineitem l ON o.o_orderkey = l.l_orderkey WHERE o.o_totalprice > 1000 AND l.l_shipdate > DATE '1995-01-01' GROUP BY o.o_custkey
+['FILTER_PROJECT_TRANSPOSE', 'AGGREGATE_UNION_AGGREGATE']
+SELECT c.c_name FROM customer c WHERE c.c_custkey IN (SELECT o.o_custkey FROM orders o WHERE o.o_totalprice > 1000 UNION ALL SELECT o2.o_custkey FROM orders o2 WHERE o2.o_orderdate > DATE '1995-01-01' GROUP BY o2.o_custkey) AND c.c_acctbal < 0
+['FILTER_SET_OP_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000 UNION SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE')
+['FILTER_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_extendedprice > 100 AND (l_discount = 0.05 OR l_discount = 0.1) AND 1+1 = 2
+['FILTER_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_shipdate > DATE '1995-01-01' AND (l_quantity > 5 OR l_quantity < 10) AND 1+1=2 AND l_partkey IN (SELECT p_partkey FROM part WHERE p_size > 10 AND 2*3=6)
+['PROJECT_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT (10 * 5) + COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_partkey IN (SELECT p_partkey FROM part WHERE p_size > 20)
+['PROJECT_REDUCE_EXPRESSIONS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT c.c_name, (5 + 3) * (SELECT COUNT(*) FROM nation) AS calc, COUNT(DISTINCT o.o_orderkey) FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey GROUP BY c.c_name
+['PROJECT_REDUCE_EXPRESSIONS', 'AGGREGATE_ANY_PULL_UP_CONSTANTS']
+SELECT c_name, (10/2+1)*3 AS calculation FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice > 500 GROUP BY o_custkey, (5+0) HAVING SUM(o_totalprice) > 10000)
+['UNION_MERGE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT c_name FROM (SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_totalprice > 10000) UNION ALL SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderpriority = '1-URGENT' UNION ALL SELECT o_custkey FROM orders WHERE o_orderstatus = 'F')) t GROUP BY c_name
+['AGGREGATE_REMOVE', 'UNION_MERGE']
+SELECT DISTINCT c_name FROM customer UNION SELECT n_name FROM nation UNION SELECT n_name FROM (SELECT DISTINCT n_name FROM nation AS n1 WHERE n_regionkey = 1) AS subq
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_TO_DISTINCT']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderpriority = '1-URGENT' UNION SELECT COUNT(DISTINCT ps_partkey) FROM partsupp WHERE ps_supplycost > 100
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderpriority = '1-URGENT' UNION SELECT l_extendedprice, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderstatus = 'F' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000)) AS subq GROUP BY l_returnflag
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT c_custkey FROM customer UNION SELECT o_custkey FROM orders WHERE o_totalprice > 1000
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer UNION SELECT o_custkey FROM (SELECT o_custkey, COUNT(*) FROM orders GROUP BY o_custkey HAVING COUNT(*) > 1) AS subq) AS t
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT c_custkey FROM customer WHERE c_acctbal < 0)
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_name FROM customer UNION SELECT DISTINCT n_name FROM nation WHERE n_regionkey = 1 UNION SELECT DISTINCT p_name FROM part WHERE p_size > 10
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderstatus = 'P' UNION ALL SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_shipmode = 'MAIL' UNION ALL SELECT 0 FROM customer WHERE c_nationkey = 1
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM (SELECT c_name, c_acctbal FROM customer ORDER BY c_acctbal) AS subq UNION SELECT n_name FROM nation
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' ORDER BY o_orderdate) UNION SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate < '1995-01-01' ORDER BY o_orderdate) ORDER BY c_name
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_orderkey) FROM (SELECT l_orderkey FROM lineitem WHERE l_shipdate > '1998-01-01' UNION ALL SELECT o_orderkey FROM orders WHERE o_orderdate < '1995-01-01') t JOIN customer ON c_custkey = t.l_orderkey
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem WHERE l_shipdate < '1995-01-01' UNION ALL SELECT l_extendedprice, l_returnflag FROM lineitem WHERE l_shipdate >= '1995-01-01' GROUP BY l_extendedprice, l_returnflag) t JOIN (SELECT o_orderkey, o_orderstatus FROM orders) o ON t.l_extendedprice = o.o_orderkey GROUP BY o.o_orderstatus
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT c_name FROM (SELECT c_name FROM customer UNION ALL SELECT n_name FROM nation) AS u JOIN orders ON u.c_name = o_orderstatus
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT o_custkey) FROM orders JOIN (SELECT c_custkey FROM customer UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT l_orderkey FROM lineitem WHERE l_quantity > 10 UNION ALL SELECT l_orderkey FROM lineitem WHERE l_discount < 0.05) AS subq ON orders.o_orderkey = subq.l_orderkey
+['SEMI_JOIN_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_partkey IN (SELECT p_partkey FROM part WHERE p_type LIKE 'MEDIUM%') AND l_suppkey IN (SELECT s_suppkey FROM supplier WHERE s_acctbal > 5000) AND l_quantity > 20
+['SEMI_JOIN_REMOVE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer WHERE c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 1) UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice > 1000) t
+['JOIN_EXTRACT_FILTER', 'UNION_MERGE']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 10 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 20 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 30)
+['JOIN_EXTRACT_FILTER', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_orderpriority = '1-URGENT')
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AND c_nationkey IN (SELECT n_nationkey FROM nation JOIN region ON n_regionkey = r_regionkey WHERE r_name = 'ASIA')

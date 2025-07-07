@@ -20,7 +20,7 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-client = OpenAI(api_key="sk-ec743c1fbdc146b4824a10cf521f6e4a", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="", base_url="https://api.deepseek.com")
 
 def query_LLM(prompt):
     chat_completion = client.chat.completions.create(
@@ -215,7 +215,7 @@ def main(rules: str):
         print("Query not valid")
         failure_log += log
         count += 1
-        if count > 20:
+        if count > 10:
             break
         print(f"Retrying...(attempt {count})")
         attempt = query_LLM(get_recovery_prompt(rules, failure_log,
@@ -223,7 +223,7 @@ def main(rules: str):
         print(attempt)
         log = check_valid(rule_list, attempt)
 
-    if count > 20:
+    if count > 10:
         print("Exploration failed")
     else:
         print("Exploration succeeded, valid query:")

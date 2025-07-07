@@ -67,7 +67,11 @@ def generate():
         print("\n\033[91mExploration failed!\033[0m")
 
 def main():
-    generate()
+    print("agg", len(aggregate_rewrite_rules))
+    print("fil", len(filter_rewrite_rules))
+    print("so", len(sort_rewrite_rules))
+    print("uni", len(union_rewrite_rules))
+    print("join", len(join_rewrite_rules))
 
 
 if __name__ == "__main__":

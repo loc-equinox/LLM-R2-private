@@ -36,8 +36,12 @@ def main():
             rule_seq = a + ";" + u
             generate(rule_seq)
     '''
-    pair_run(filter_rewrite_rules, aggregate_rewrite_rules)
-    pair_run(sort_rewrite_rules, aggregate_rewrite_rules)
+    # aggregate + filter
+    # aggregate + sort
+    # union + aggregate
+    # sort + union
+    pair_run(join_rewrite_rules, aggregate_rewrite_rules)
+    pair_run(union_rewrite_rules, join_rewrite_rules)
 
 
 if __name__ == "__main__":
