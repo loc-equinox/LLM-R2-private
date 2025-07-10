@@ -1,4 +1,4 @@
-Part 1: genearating queries that are sensitive to rewrite orders
+Prcrt 1: genearating queries that are sensitive to rewrite orders
 
 Related files:
 + gen_order_sensitive_queries.py:

@@ -1,0 +1,442 @@
+[
+  {
+    "table": "frpm",
+    "rows": 9986,
+    "columns": [
+      {
+        "name": "CDSCode",
+        "type": "text"
+      },
+      {
+        "name": "Academic Year",
+        "type": "text"
+      },
+      {
+        "name": "County Code",
+        "type": "text"
+      },
+      {
+        "name": "District Code",
+        "type": "bigint"
+      },
+      {
+        "name": "School Code",
+        "type": "text"
+      },
+      {
+        "name": "County Name",
+        "type": "text"
+      },
+      {
+        "name": "District Name",
+        "type": "text"
+      },
+      {
+        "name": "School Name",
+        "type": "text"
+      },
+      {
+        "name": "District Type",
+        "type": "text"
+      },
+      {
+        "name": "School Type",
+        "type": "text"
+      },
+      {
+        "name": "Educational Option Type",
+        "type": "text"
+      },
+      {
+        "name": "NSLP Provision Status",
+        "type": "text"
+      },
+      {
+        "name": "Charter School (Y/N)",
+        "type": "bigint"
+      },
+      {
+        "name": "Charter School Number",
+        "type": "text"
+      },
+      {
+        "name": "Charter Funding Type",
+        "type": "text"
+      },
+      {
+        "name": "IRC",
+        "type": "bigint"
+      },
+      {
+        "name": "Low Grade",
+        "type": "text"
+      },
+      {
+        "name": "High Grade",
+        "type": "text"
+      },
+      {
+        "name": "Enrollment (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Free Meal Count (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible Free (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "FRPM Count (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible FRPM (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Enrollment (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Free Meal Count (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible Free (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "FRPM Count (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible FRPM (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "2013-14 CALPADS Fall 1 Certification Status",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "frpm_record",
+    "rows": 56,
+    "columns": [
+      {
+        "name": "element",
+        "type": "character varying"
+      },
+      {
+        "name": "record",
+        "type": "double precision"
+      },
+      {
+        "name": "record_id",
+        "type": "uuid"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "source_system",
+        "type": "character varying"
+      },
+      {
+        "name": "is_verified",
+        "type": "boolean"
+      },
+      {
+        "name": "verification_date",
+        "type": "date"
+      },
+      {
+        "name": "notes",
+        "type": "text"
+      },
+      {
+        "name": "record_version",
+        "type": "integer"
+      },
+      {
+        "name": "processing_status",
+        "type": "character varying"
+      },
+      {
+        "name": "metadata",
+        "type": "jsonb"
+      },
+      {
+        "name": "batch_id",
+        "type": "bigint"
+      },
+      {
+        "name": "last_processed_by",
+        "type": "character varying"
+      },
+      {
+        "name": "data_quality_score",
+        "type": "numeric"
+      }
+    ]
+  },
+  {
+    "table": "satscores",
+    "rows": 2269,
+    "columns": [
+      {
+        "name": "cds",
+        "type": "text"
+      },
+      {
+        "name": "rtype",
+        "type": "text"
+      },
+      {
+        "name": "sname",
+        "type": "text"
+      },
+      {
+        "name": "dname",
+        "type": "text"
+      },
+      {
+        "name": "cname",
+        "type": "text"
+      },
+      {
+        "name": "enroll12",
+        "type": "bigint"
+      },
+      {
+        "name": "numtsttakr",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrread",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrmath",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrwrite",
+        "type": "bigint"
+      },
+      {
+        "name": "numge1500",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "schools",
+    "rows": 17686,
+    "columns": [
+      {
+        "name": "cdscode",
+        "type": "text"
+      },
+      {
+        "name": "ncesdist",
+        "type": "text"
+      },
+      {
+        "name": "ncesschool",
+        "type": "text"
+      },
+      {
+        "name": "statustype",
+        "type": "text"
+      },
+      {
+        "name": "county",
+        "type": "text"
+      },
+      {
+        "name": "district",
+        "type": "text"
+      },
+      {
+        "name": "school",
+        "type": "text"
+      },
+      {
+        "name": "street",
+        "type": "text"
+      },
+      {
+        "name": "streetabr",
+        "type": "text"
+      },
+      {
+        "name": "city",
+        "type": "text"
+      },
+      {
+        "name": "zip",
+        "type": "text"
+      },
+      {
+        "name": "state",
+        "type": "text"
+      },
+      {
+        "name": "mailstreet",
+        "type": "text"
+      },
+      {
+        "name": "mailstrabr",
+        "type": "text"
+      },
+      {
+        "name": "mailcity",
+        "type": "text"
+      },
+      {
+        "name": "mailzip",
+        "type": "text"
+      },
+      {
+        "name": "mailstate",
+        "type": "text"
+      },
+      {
+        "name": "phone",
+        "type": "text"
+      },
+      {
+        "name": "ext",
+        "type": "text"
+      },
+      {
+        "name": "website",
+        "type": "text"
+      },
+      {
+        "name": "opendate",
+        "type": "date"
+      },
+      {
+        "name": "closeddate",
+        "type": "date"
+      },
+      {
+        "name": "charter",
+        "type": "bigint"
+      },
+      {
+        "name": "charternum",
+        "type": "text"
+      },
+      {
+        "name": "fundingtype",
+        "type": "text"
+      },
+      {
+        "name": "doc",
+        "type": "text"
+      },
+      {
+        "name": "doctype",
+        "type": "text"
+      },
+      {
+        "name": "soc",
+        "type": "text"
+      },
+      {
+        "name": "soctype",
+        "type": "text"
+      },
+      {
+        "name": "edopscode",
+        "type": "text"
+      },
+      {
+        "name": "edopsname",
+        "type": "text"
+      },
+      {
+        "name": "eilcode",
+        "type": "text"
+      },
+      {
+        "name": "eilname",
+        "type": "text"
+      },
+      {
+        "name": "gsoffered",
+        "type": "text"
+      },
+      {
+        "name": "gsserved",
+        "type": "text"
+      },
+      {
+        "name": "virtual",
+        "type": "text"
+      },
+      {
+        "name": "magnet",
+        "type": "bigint"
+      },
+      {
+        "name": "latitude",
+        "type": "real"
+      },
+      {
+        "name": "longitude",
+        "type": "real"
+      },
+      {
+        "name": "admfname1",
+        "type": "text"
+      },
+      {
+        "name": "admlname1",
+        "type": "text"
+      },
+      {
+        "name": "admemail1",
+        "type": "text"
+      },
+      {
+        "name": "admfname2",
+        "type": "text"
+      },
+      {
+        "name": "admlname2",
+        "type": "text"
+      },
+      {
+        "name": "admemail2",
+        "type": "text"
+      },
+      {
+        "name": "admfname3",
+        "type": "text"
+      },
+      {
+        "name": "admlname3",
+        "type": "text"
+      },
+      {
+        "name": "admemail3",
+        "type": "text"
+      },
+      {
+        "name": "lastupdate",
+        "type": "date"
+      }
+    ]
+  }
+]

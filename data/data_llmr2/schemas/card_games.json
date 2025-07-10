@@ -1,0 +1,694 @@
+[
+  {
+    "table": "card_choice",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "card_id",
+        "type": "integer"
+      },
+      {
+        "name": "non_valid_cards",
+        "type": "jsonb"
+      }
+    ]
+  },
+  {
+    "table": "card_type",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "cardid",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "cards",
+    "rows": 652,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "artist",
+        "type": "text"
+      },
+      {
+        "name": "asciiname",
+        "type": "text"
+      },
+      {
+        "name": "availability",
+        "type": "text"
+      },
+      {
+        "name": "bordercolor",
+        "type": "text"
+      },
+      {
+        "name": "cardkingdomfoilid",
+        "type": "text"
+      },
+      {
+        "name": "cardkingdomid",
+        "type": "text"
+      },
+      {
+        "name": "coloridentity",
+        "type": "text"
+      },
+      {
+        "name": "colorindicator",
+        "type": "text"
+      },
+      {
+        "name": "colors",
+        "type": "text"
+      },
+      {
+        "name": "convertedmanacost",
+        "type": "real"
+      },
+      {
+        "name": "dueldeck",
+        "type": "text"
+      },
+      {
+        "name": "edhrecrank",
+        "type": "bigint"
+      },
+      {
+        "name": "faceconvertedmanacost",
+        "type": "real"
+      },
+      {
+        "name": "facename",
+        "type": "text"
+      },
+      {
+        "name": "flavorname",
+        "type": "text"
+      },
+      {
+        "name": "flavortext",
+        "type": "text"
+      },
+      {
+        "name": "frameeffects",
+        "type": "text"
+      },
+      {
+        "name": "frameversion",
+        "type": "text"
+      },
+      {
+        "name": "hand",
+        "type": "text"
+      },
+      {
+        "name": "hasalternativedecklimit",
+        "type": "bigint"
+      },
+      {
+        "name": "hascontentwarning",
+        "type": "bigint"
+      },
+      {
+        "name": "hasfoil",
+        "type": "bigint"
+      },
+      {
+        "name": "hasnonfoil",
+        "type": "bigint"
+      },
+      {
+        "name": "isalternative",
+        "type": "bigint"
+      },
+      {
+        "name": "isfullart",
+        "type": "bigint"
+      },
+      {
+        "name": "isonlineonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isoversized",
+        "type": "bigint"
+      },
+      {
+        "name": "ispromo",
+        "type": "bigint"
+      },
+      {
+        "name": "isreprint",
+        "type": "bigint"
+      },
+      {
+        "name": "isreserved",
+        "type": "bigint"
+      },
+      {
+        "name": "isstarter",
+        "type": "bigint"
+      },
+      {
+        "name": "isstoryspotlight",
+        "type": "bigint"
+      },
+      {
+        "name": "istextless",
+        "type": "bigint"
+      },
+      {
+        "name": "istimeshifted",
+        "type": "bigint"
+      },
+      {
+        "name": "keywords",
+        "type": "text"
+      },
+      {
+        "name": "layout",
+        "type": "text"
+      },
+      {
+        "name": "leadershipskills",
+        "type": "text"
+      },
+      {
+        "name": "life",
+        "type": "text"
+      },
+      {
+        "name": "loyalty",
+        "type": "text"
+      },
+      {
+        "name": "manacost",
+        "type": "text"
+      },
+      {
+        "name": "mcmid",
+        "type": "text"
+      },
+      {
+        "name": "mcmmetaid",
+        "type": "text"
+      },
+      {
+        "name": "mtgarenaid",
+        "type": "text"
+      },
+      {
+        "name": "mtgjsonv4id",
+        "type": "text"
+      },
+      {
+        "name": "mtgofoilid",
+        "type": "text"
+      },
+      {
+        "name": "mtgoid",
+        "type": "text"
+      },
+      {
+        "name": "multiverseid",
+        "type": "text"
+      },
+      {
+        "name": "name",
+        "type": "text"
+      },
+      {
+        "name": "number",
+        "type": "text"
+      },
+      {
+        "name": "originalreleasedate",
+        "type": "text"
+      },
+      {
+        "name": "originaltext",
+        "type": "text"
+      },
+      {
+        "name": "originaltype",
+        "type": "text"
+      },
+      {
+        "name": "otherfaceids",
+        "type": "text"
+      },
+      {
+        "name": "power",
+        "type": "text"
+      },
+      {
+        "name": "printings",
+        "type": "text"
+      },
+      {
+        "name": "promotypes",
+        "type": "text"
+      },
+      {
+        "name": "purchaseurls",
+        "type": "text"
+      },
+      {
+        "name": "rarity",
+        "type": "text"
+      },
+      {
+        "name": "scryfallid",
+        "type": "text"
+      },
+      {
+        "name": "scryfallillustrationid",
+        "type": "text"
+      },
+      {
+        "name": "scryfalloracleid",
+        "type": "text"
+      },
+      {
+        "name": "setcode",
+        "type": "text"
+      },
+      {
+        "name": "side",
+        "type": "text"
+      },
+      {
+        "name": "subtypes",
+        "type": "text"
+      },
+      {
+        "name": "supertypes",
+        "type": "text"
+      },
+      {
+        "name": "tcgplayerproductid",
+        "type": "text"
+      },
+      {
+        "name": "text",
+        "type": "text"
+      },
+      {
+        "name": "toughness",
+        "type": "text"
+      },
+      {
+        "name": "type",
+        "type": "text"
+      },
+      {
+        "name": "types",
+        "type": "text"
+      },
+      {
+        "name": "uuid",
+        "type": "text"
+      },
+      {
+        "name": "variations",
+        "type": "text"
+      },
+      {
+        "name": "watermark",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "table": "cards_info",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "contents",
+    "rows": 6,
+    "columns": [
+      {
+        "name": "packageid",
+        "type": "integer"
+      },
+      {
+        "name": "item",
+        "type": "character varying"
+      },
+      {
+        "name": "size",
+        "type": "character"
+      },
+      {
+        "name": "content_id",
+        "type": "bigint"
+      },
+      {
+        "name": "added_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "quantity",
+        "type": "integer"
+      },
+      {
+        "name": "unit_price",
+        "type": "numeric"
+      },
+      {
+        "name": "condition",
+        "type": "character varying"
+      },
+      {
+        "name": "notes",
+        "type": "text"
+      },
+      {
+        "name": "is_serialized",
+        "type": "boolean"
+      },
+      {
+        "name": "serial_number",
+        "type": "character varying"
+      },
+      {
+        "name": "custom_properties",
+        "type": "jsonb"
+      },
+      {
+        "name": "item_sku",
+        "type": "character varying"
+      },
+      {
+        "name": "origin_country",
+        "type": "character varying"
+      },
+      {
+        "name": "last_checked_by",
+        "type": "character varying"
+      },
+      {
+        "name": "check_timestamp",
+        "type": "timestamp with time zone"
+      }
+    ]
+  },
+  {
+    "table": "foreign_data",
+    "rows": 229186,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "flavortext",
+        "type": "text"
+      },
+      {
+        "name": "language",
+        "type": "text"
+      },
+      {
+        "name": "multiverseid",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "text"
+      },
+      {
+        "name": "text",
+        "type": "text"
+      },
+      {
+        "name": "type",
+        "type": "text"
+      },
+      {
+        "name": "uuid",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "table": "info",
+    "rows": 30,
+    "columns": [
+      {
+        "name": "cardid",
+        "type": "integer"
+      },
+      {
+        "name": "info",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "legalities",
+    "rows": 427907,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "format",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "text"
+      },
+      {
+        "name": "uuid",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "table": "packages",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "character varying"
+      },
+      {
+        "name": "priority",
+        "type": "integer"
+      },
+      {
+        "name": "weight_kg",
+        "type": "numeric"
+      },
+      {
+        "name": "is_fragile",
+        "type": "boolean"
+      },
+      {
+        "name": "metadata",
+        "type": "jsonb"
+      },
+      {
+        "name": "tracking_id",
+        "type": "uuid"
+      },
+      {
+        "name": "last_scanned_location",
+        "type": "character varying"
+      },
+      {
+        "name": "estimated_delivery_date",
+        "type": "date"
+      },
+      {
+        "name": "internal_notes",
+        "type": "text"
+      },
+      {
+        "name": "version",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "rulings",
+    "rows": 1641,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "text",
+        "type": "text"
+      },
+      {
+        "name": "uuid",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "table": "set_translations",
+    "rows": 1210,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "language",
+        "type": "text"
+      },
+      {
+        "name": "setcode",
+        "type": "text"
+      },
+      {
+        "name": "translation",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "table": "sets",
+    "rows": 551,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "basesetsize",
+        "type": "bigint"
+      },
+      {
+        "name": "block",
+        "type": "text"
+      },
+      {
+        "name": "booster",
+        "type": "text"
+      },
+      {
+        "name": "code",
+        "type": "text"
+      },
+      {
+        "name": "isfoilonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isforeignonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isnonfoilonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isonlineonly",
+        "type": "bigint"
+      },
+      {
+        "name": "ispartialpreview",
+        "type": "bigint"
+      },
+      {
+        "name": "keyrunecode",
+        "type": "text"
+      },
+      {
+        "name": "mcmid",
+        "type": "bigint"
+      },
+      {
+        "name": "mcmidextras",
+        "type": "bigint"
+      },
+      {
+        "name": "mcmname",
+        "type": "text"
+      },
+      {
+        "name": "mtgocode",
+        "type": "text"
+      },
+      {
+        "name": "name",
+        "type": "text"
+      },
+      {
+        "name": "parentcode",
+        "type": "text"
+      },
+      {
+        "name": "releasedate",
+        "type": "date"
+      },
+      {
+        "name": "tcgplayergroupid",
+        "type": "bigint"
+      },
+      {
+        "name": "totalsetsize",
+        "type": "bigint"
+      },
+      {
+        "name": "type",
+        "type": "text"
+      }
+    ]
+  }
+]

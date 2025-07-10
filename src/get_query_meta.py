@@ -132,9 +132,8 @@ def get_physical_tree(db_id, sql_input, row_only=False):
     output, error = process.communicate(input=input_string)
 
     # Print the output and error messages
-    # print("Output:\n", output)
-    # print(sql_input)
-    # print("Error:\n", error)
+    print("Output:\n", output)
+    print(sql_input)
     output = output.replace("\u001B[32m", '').replace("\u001B[0m", '').split('\n')
     ind = 0
     for i in output:

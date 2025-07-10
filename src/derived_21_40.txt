@@ -1,0 +1,404 @@
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'UNION_TO_DISTINCT']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderpriority = '1-URGENT' UNION SELECT COUNT(DISTINCT ps_partkey) FROM partsupp WHERE ps_supplycost > 100
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderpriority = '1-URGENT' UNION SELECT l_extendedprice, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderstatus = 'F' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000)) AS subq GROUP BY l_returnflag
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT MIN(p_retailprice) FROM (SELECT p_retailprice, p_brand FROM part JOIN partsupp ON p_partkey = ps_partkey WHERE ps_availqty > 100 UNION SELECT p_retailprice, p_brand FROM part JOIN lineitem ON p_partkey = l_partkey WHERE l_quantity > 30 AND l_shipmode IN (SELECT l_shipmode FROM lineitem WHERE l_receiptdate < '1995-01-01')) AS subq GROUP BY p_brand
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT AVG(p_retailprice) FROM (SELECT p_retailprice, p_type FROM part JOIN supplier ON p_partkey = s_suppkey WHERE s_nationkey = 1 UNION SELECT p_retailprice, p_type FROM part JOIN lineitem ON p_partkey = l_partkey WHERE l_discount > 0.05 AND l_shipdate IN (SELECT l_shipdate FROM lineitem WHERE l_commitdate > '1996-01-01')) AS subq GROUP BY p_type
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT COUNT(o_orderkey) FROM (SELECT o_orderkey, o_orderpriority FROM orders JOIN customer ON o_custkey = c_custkey WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT o_orderkey, o_orderpriority FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity < 10 AND l_shipdate IN (SELECT l_shipdate FROM lineitem WHERE l_receiptdate > '1997-01-01')) AS subq GROUP BY o_orderpriority
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_shipinstruct FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderpriority = '2-HIGH' UNION SELECT l_extendedprice, l_shipinstruct FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderstatus = 'P' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal < 500)) AS subq GROUP BY l_shipinstruct
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT AVG(s_acctbal) FROM (SELECT s_acctbal, s_name FROM supplier JOIN region ON s_nationkey = r_regionkey WHERE r_name = 'ASIA' UNION SELECT s_acctbal, s_name FROM supplier JOIN partsupp ON s_suppkey = ps_suppkey WHERE ps_supplycost < 100 AND ps_availqty IN (SELECT ps_availqty FROM partsupp WHERE ps_partkey > 1000)) AS subq GROUP BY s_name
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT SUM(l_quantity) FROM (SELECT l_quantity, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderpriority = '3-MEDIUM' UNION SELECT l_quantity, l_returnflag FROM lineitem JOIN orders ON l_orderkey = o_orderkey WHERE o_orderstatus = 'O' AND o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal < 2000)) AS subq GROUP BY l_returnflag
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT SUM(ps_supplycost) FROM (SELECT ps_supplycost, ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_nationkey = 4 UNION SELECT ps_supplycost, ps_partkey FROM partsupp JOIN part ON ps_partkey = p_partkey WHERE p_size < 15 AND p_type IN (SELECT p_type FROM part WHERE p_retailprice > 100)) AS subq GROUP BY ps_partkey
+['AGGREGATE_JOIN_TRANSPOSE_EXTENDED', 'UNION_TO_DISTINCT']
+SELECT COUNT(o_orderkey) FROM (SELECT o_orderkey, o_orderstatus FROM orders JOIN customer ON o_custkey = c_custkey WHERE c_mktsegment = 'BUILDING' UNION SELECT o_orderkey, o_orderstatus FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 20 AND l_shipdate IN (SELECT l_shipdate FROM lineitem WHERE l_receiptdate < '1996-01-01')) AS subq GROUP BY o_orderstatus
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT c_custkey FROM customer UNION SELECT o_custkey FROM orders WHERE o_totalprice > 1000
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT s_suppkey FROM supplier UNION SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 50
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT p_partkey FROM part UNION SELECT ps_partkey FROM partsupp WHERE ps_availqty > 500
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT n_nationkey FROM nation UNION SELECT s_nationkey FROM supplier WHERE s_acctbal > 5000
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT l_orderkey FROM lineitem UNION SELECT o_orderkey FROM orders WHERE o_orderdate > '1995-01-01'
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT p_name FROM part UNION SELECT p_type FROM part WHERE p_size > 20
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT c_name FROM customer UNION SELECT c_comment FROM customer WHERE c_acctbal < 2000
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT l_partkey FROM lineitem UNION SELECT p_partkey FROM part WHERE p_retailprice > 100
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT s_name FROM supplier UNION SELECT s_comment FROM supplier WHERE s_acctbal < 3000
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT o_orderkey FROM orders UNION SELECT l_orderkey FROM lineitem WHERE l_quantity > 30
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT c_phone FROM customer UNION SELECT c_address FROM customer WHERE c_nationkey = 15
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT p_mfgr FROM part UNION SELECT p_brand FROM part WHERE p_retailprice < 50
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT o_orderstatus FROM orders UNION SELECT o_clerk FROM orders WHERE o_totalprice < 500
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT s_address FROM supplier UNION SELECT s_phone FROM supplier WHERE s_nationkey = 10
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT l_suppkey FROM lineitem UNION SELECT s_suppkey FROM supplier WHERE s_acctbal > 10000
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT l_shipmode FROM lineitem UNION SELECT l_shipinstruct FROM lineitem WHERE l_discount > 0.1
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_AGGREGATE']
+SELECT DISTINCT p_container FROM part UNION SELECT p_type FROM part WHERE p_size < 15
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer UNION SELECT o_custkey FROM (SELECT o_custkey, COUNT(*) FROM orders GROUP BY o_custkey HAVING COUNT(*) > 1) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT s_suppkey FROM supplier UNION SELECT ps_suppkey FROM (SELECT ps_suppkey, COUNT(*) FROM partsupp GROUP BY ps_suppkey HAVING COUNT(*) > 5) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT p_partkey FROM part UNION SELECT ps_partkey FROM (SELECT ps_partkey, COUNT(*) FROM partsupp GROUP BY ps_partkey HAVING COUNT(*) > 3) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT r_regionkey FROM region UNION SELECT n_regionkey FROM (SELECT n_regionkey, COUNT(*) FROM nation GROUP BY n_regionkey HAVING COUNT(*) > 4) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_nationkey FROM customer UNION SELECT n_nationkey FROM (SELECT n_nationkey, COUNT(*) FROM nation GROUP BY n_nationkey HAVING COUNT(*) > 3) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT l_orderkey FROM lineitem UNION SELECT o_orderkey FROM (SELECT o_orderkey, COUNT(*) FROM orders GROUP BY o_orderkey HAVING COUNT(*) > 2) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT s_suppkey FROM supplier UNION SELECT l_suppkey FROM (SELECT l_suppkey, COUNT(*) FROM lineitem GROUP BY l_suppkey HAVING COUNT(*) > 10) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT p_partkey FROM part UNION SELECT l_partkey FROM (SELECT l_partkey, COUNT(*) FROM lineitem GROUP BY l_partkey HAVING COUNT(*) > 7) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_nationkey FROM customer UNION SELECT s_nationkey FROM (SELECT s_nationkey, COUNT(*) FROM supplier GROUP BY s_nationkey HAVING COUNT(*) > 4) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT o_orderkey FROM orders UNION SELECT l_orderkey FROM (SELECT l_orderkey, COUNT(*) FROM lineitem GROUP BY l_orderkey HAVING COUNT(*) > 5) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT r_regionkey FROM region UNION SELECT n_regionkey FROM (SELECT n_regionkey, COUNT(*) FROM nation GROUP BY n_regionkey HAVING COUNT(*) > 1) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer UNION SELECT o_custkey FROM (SELECT o_custkey, COUNT(*) FROM orders GROUP BY o_custkey HAVING COUNT(*) > 3) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT p_partkey FROM part UNION SELECT ps_partkey FROM (SELECT ps_partkey, COUNT(*) FROM partsupp GROUP BY ps_partkey HAVING COUNT(*) > 8) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT s_suppkey FROM supplier UNION SELECT l_suppkey FROM (SELECT l_suppkey, COUNT(*) FROM lineitem GROUP BY l_suppkey HAVING COUNT(*) > 15) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_name FROM customer UNION SELECT s_name FROM (SELECT s_name, COUNT(*) FROM supplier GROUP BY s_name HAVING COUNT(*) > 2) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_address FROM customer UNION SELECT s_address FROM (SELECT s_address, COUNT(*) FROM supplier GROUP BY s_address HAVING COUNT(*) > 3) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_phone FROM customer UNION SELECT s_phone FROM (SELECT s_phone, COUNT(*) FROM supplier GROUP BY s_phone HAVING COUNT(*) > 1) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_mktsegment FROM customer UNION SELECT p_type FROM (SELECT p_type, COUNT(*) FROM part GROUP BY p_type HAVING COUNT(*) > 4) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT c_acctbal FROM customer UNION SELECT s_acctbal FROM (SELECT s_acctbal, COUNT(*) FROM supplier GROUP BY s_acctbal HAVING COUNT(*) > 5) AS subq) AS t
+['AGGREGATE_UNION_AGGREGATE', 'UNION_TO_DISTINCT']
+SELECT COUNT(*) FROM (SELECT p_name FROM part UNION SELECT p_type FROM (SELECT p_type, COUNT(*) FROM part GROUP BY p_type HAVING COUNT(*) > 6) AS subq) AS t
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT c_custkey FROM customer WHERE c_acctbal < 0)
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT n_name FROM nation WHERE n_nationkey IN (SELECT c_nationkey FROM customer WHERE c_acctbal > 1000 UNION SELECT s_nationkey FROM supplier WHERE s_acctbal < 500)
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT p_brand FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 50 UNION SELECT p_partkey FROM part WHERE p_size < 10)
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 30 UNION SELECT p_partkey FROM part WHERE p_size > 15)
+['UNION_TO_DISTINCT', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT c_mktsegment FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate < '1994-01-01' UNION SELECT c_custkey FROM customer WHERE c_acctbal > 5000)
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_name FROM customer UNION SELECT DISTINCT n_name FROM nation WHERE n_regionkey = 1 UNION SELECT DISTINCT p_name FROM part WHERE p_size > 10
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT s_name FROM supplier UNION SELECT DISTINCT r_name FROM region WHERE r_regionkey = 2 UNION SELECT DISTINCT p_type FROM part WHERE p_size < 5
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_clerk FROM orders UNION SELECT DISTINCT s_address FROM supplier WHERE s_nationkey = 3 UNION SELECT DISTINCT l_shipmode FROM lineitem WHERE l_quantity > 20
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_address FROM customer UNION SELECT DISTINCT n_comment FROM nation WHERE n_regionkey = 3 UNION SELECT DISTINCT p_mfgr FROM part WHERE p_size < 8
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_phone FROM customer UNION SELECT DISTINCT s_phone FROM supplier WHERE s_acctbal > 5000 UNION SELECT DISTINCT l_returnflag FROM lineitem WHERE l_discount < 0.05
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_orderpriority FROM orders UNION SELECT DISTINCT c_mktsegment FROM customer WHERE c_acctbal < 1000 UNION SELECT DISTINCT l_shipinstruct FROM lineitem WHERE l_tax > 0.1
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_comment FROM customer UNION SELECT DISTINCT n_name FROM nation WHERE n_regionkey = 4 UNION SELECT DISTINCT p_container FROM part WHERE p_size > 15
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_orderstatus FROM orders UNION SELECT DISTINCT s_name FROM supplier WHERE s_acctbal < 3000 UNION SELECT DISTINCT l_linestatus FROM lineitem WHERE l_extendedprice > 50
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_brand FROM part UNION SELECT DISTINCT s_address FROM supplier WHERE s_nationkey = 5 UNION SELECT DISTINCT l_comment FROM lineitem WHERE l_quantity > 25
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_name FROM part UNION SELECT DISTINCT c_address FROM customer WHERE c_acctbal > 2000 UNION SELECT DISTINCT l_shipmode FROM lineitem WHERE l_tax < 0.08
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_totalprice FROM orders UNION SELECT DISTINCT s_acctbal FROM supplier WHERE s_nationkey = 4 UNION SELECT DISTINCT l_extendedprice FROM lineitem WHERE l_discount > 0.15
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_type FROM part UNION SELECT DISTINCT n_name FROM nation WHERE n_regionkey = 2 UNION SELECT DISTINCT l_shipmode FROM lineitem WHERE l_quantity > 15
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT c_mktsegment FROM customer UNION SELECT DISTINCT r_name FROM region WHERE r_regionkey = 1 UNION SELECT DISTINCT p_brand FROM part WHERE p_size > 12
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_comment FROM orders UNION SELECT DISTINCT s_comment FROM supplier WHERE s_nationkey = 6 UNION SELECT DISTINCT l_comment FROM lineitem WHERE l_quantity > 30
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_mfgr FROM part UNION SELECT DISTINCT n_comment FROM nation WHERE n_regionkey = 2 UNION SELECT DISTINCT l_shipinstruct FROM lineitem WHERE l_discount > 0.2
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_size FROM part UNION SELECT DISTINCT c_acctbal FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION SELECT DISTINCT l_quantity FROM lineitem WHERE l_extendedprice < 100
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_clerk FROM orders UNION SELECT DISTINCT n_name FROM nation WHERE n_regionkey = 2 UNION SELECT DISTINCT l_shipinstruct FROM lineitem WHERE l_quantity > 15
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_comment FROM part UNION SELECT DISTINCT r_name FROM region WHERE r_regionkey = 4 UNION SELECT DISTINCT l_shipinstruct FROM lineitem WHERE l_quantity > 18
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT o_totalprice FROM orders UNION SELECT DISTINCT c_acctbal FROM customer WHERE c_mktsegment = 'BUILDING' UNION SELECT DISTINCT l_extendedprice FROM lineitem WHERE l_discount > 0.18
+['AGGREGATE_REMOVE', 'UNION_TO_DISTINCT']
+SELECT DISTINCT p_comment FROM part UNION SELECT DISTINCT s_comment FROM supplier WHERE s_acctbal < 3500 UNION SELECT DISTINCT l_comment FROM lineitem WHERE l_quantity > 20
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderstatus = 'P' UNION ALL SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_shipmode = 'MAIL' UNION ALL SELECT 0 FROM customer WHERE c_nationkey = 1
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT p_partkey) FROM part WHERE p_size > 10 UNION ALL SELECT COUNT(DISTINCT ps_suppkey) FROM partsupp WHERE ps_availqty < 1000 UNION ALL SELECT 0 FROM supplier WHERE s_nationkey = 4
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_linenumber) FROM lineitem WHERE l_discount > 0.05 UNION ALL SELECT COUNT(DISTINCT o_orderkey) FROM orders WHERE o_orderpriority = '1-URGENT' UNION ALL SELECT 0 FROM part WHERE p_type = 'STANDARD'
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_shipmode = 'AIR' UNION ALL SELECT COUNT(DISTINCT p_partkey) FROM part WHERE p_type = 'ECONOMY' UNION ALL SELECT 0 FROM supplier WHERE s_acctbal > 1500
+['UNION_PULL_UP_CONSTANTS', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_custkey) FROM orders WHERE o_orderstatus = 'O' UNION ALL SELECT COUNT(DISTINCT l_linenumber) FROM lineitem WHERE l_shipmode = 'TRUCK' UNION ALL SELECT 0 FROM part WHERE p_size = 15
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM (SELECT c_name, c_acctbal FROM customer ORDER BY c_acctbal) AS subq UNION SELECT n_name FROM nation
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT s_name FROM (SELECT s_name, s_acctbal FROM supplier ORDER BY s_acctbal) AS subq UNION SELECT r_name FROM region
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_name FROM (SELECT p_name, p_retailprice FROM part ORDER BY p_retailprice) AS subq UNION SELECT n_name FROM nation
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_clerk FROM (SELECT o_clerk, o_totalprice FROM orders ORDER BY o_totalprice) AS subq UNION SELECT p_name FROM part
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_address FROM (SELECT c_address, c_nationkey FROM customer ORDER BY c_nationkey) AS subq UNION SELECT s_address FROM supplier
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_type FROM (SELECT p_type, p_size FROM part ORDER BY p_size) AS subq UNION SELECT s_name FROM supplier
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT l_shipmode FROM (SELECT l_shipmode, l_quantity FROM lineitem ORDER BY l_quantity) AS subq UNION SELECT c_phone FROM customer
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT n_name FROM (SELECT n_name, n_regionkey FROM nation ORDER BY n_regionkey) AS subq UNION SELECT p_container FROM part
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT l_returnflag FROM (SELECT l_returnflag, l_tax FROM lineitem ORDER BY l_tax) AS subq UNION SELECT c_mktsegment FROM customer
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT s_phone FROM (SELECT s_phone, s_nationkey FROM supplier ORDER BY s_nationkey) AS subq UNION SELECT p_brand FROM part
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT l_shipinstruct FROM (SELECT l_shipinstruct, l_discount FROM lineitem ORDER BY l_discount) AS subq UNION SELECT r_comment FROM region
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_orderpriority FROM (SELECT o_orderpriority, o_shippriority FROM orders ORDER BY o_shippriority) AS subq UNION SELECT p_mfgr FROM part
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT l_linestatus FROM (SELECT l_linestatus, l_extendedprice FROM lineitem ORDER BY l_extendedprice) AS subq UNION SELECT r_comment FROM region
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_container FROM (SELECT p_container, p_size FROM part ORDER BY p_size) AS subq UNION SELECT s_address FROM supplier
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_orderstatus FROM (SELECT o_orderstatus, o_orderdate FROM orders ORDER BY o_orderdate) AS subq UNION SELECT n_comment FROM nation
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_comment FROM (SELECT c_comment, c_custkey FROM customer ORDER BY c_custkey) AS subq UNION SELECT l_shipmode FROM lineitem
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT r_comment FROM (SELECT r_comment, r_regionkey FROM region ORDER BY r_regionkey) AS subq UNION SELECT l_comment FROM lineitem
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_phone FROM (SELECT c_phone, c_mktsegment FROM customer ORDER BY c_mktsegment) AS subq UNION SELECT p_type FROM part
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_brand FROM (SELECT p_brand, p_retailprice FROM part ORDER BY p_retailprice) AS subq UNION SELECT s_comment FROM supplier
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT n_comment FROM (SELECT n_comment, n_nationkey FROM nation ORDER BY n_nationkey) AS subq UNION SELECT l_shipinstruct FROM lineitem
+['SORT_PROJECT_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_orderpriority FROM (SELECT o_orderpriority, o_clerk FROM orders ORDER BY o_clerk) AS subq UNION SELECT p_container FROM part
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' ORDER BY o_orderdate) UNION SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate < '1995-01-01' ORDER BY o_orderdate) ORDER BY c_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 100 ORDER BY ps_supplycost) UNION SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 100 ORDER BY ps_supplycost) ORDER BY s_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_shipdate > '1996-01-01' ORDER BY l_shipdate) UNION SELECT p_name FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_shipdate < '1996-01-01' ORDER BY l_shipdate) ORDER BY p_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT n_name FROM nation WHERE n_nationkey IN (SELECT c_nationkey FROM customer WHERE c_acctbal > 5000 ORDER BY c_acctbal) UNION SELECT n_name FROM nation WHERE n_nationkey IN (SELECT c_nationkey FROM customer WHERE c_acctbal < 5000 ORDER BY c_acctbal) ORDER BY n_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT r_name FROM region WHERE r_regionkey IN (SELECT n_regionkey FROM nation WHERE n_name LIKE 'A%' ORDER BY n_name) UNION SELECT r_name FROM region WHERE r_regionkey IN (SELECT n_regionkey FROM nation WHERE n_name NOT LIKE 'A%' ORDER BY n_name) ORDER BY r_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_type FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_availqty > 50 ORDER BY ps_availqty) UNION SELECT p_type FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_availqty < 50 ORDER BY ps_availqty) ORDER BY p_type
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT s_address FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 200 ORDER BY ps_supplycost) UNION SELECT s_address FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 200 ORDER BY ps_supplycost) ORDER BY s_address
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT c_address FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice > 10000 ORDER BY o_totalprice) UNION SELECT c_address FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice < 10000 ORDER BY o_totalprice) ORDER BY c_address
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_mfgr FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_quantity > 30 ORDER BY l_quantity) UNION SELECT p_mfgr FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_quantity < 30 ORDER BY l_quantity) ORDER BY p_mfgr
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT c_phone FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice > 15000 ORDER BY o_totalprice) UNION SELECT c_phone FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_totalprice < 15000 ORDER BY o_totalprice) ORDER BY c_phone
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_brand FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost > 150 ORDER BY ps_supplycost) UNION SELECT p_brand FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 150 ORDER BY ps_supplycost) ORDER BY p_brand
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT s_phone FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 250 ORDER BY ps_supplycost) UNION SELECT s_phone FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 250 ORDER BY ps_supplycost) ORDER BY s_phone
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT c_comment FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1998-01-01' ORDER BY o_orderdate) UNION SELECT c_comment FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate < '1998-01-01' ORDER BY o_orderdate) ORDER BY c_comment
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty > 75 ORDER BY ps_availqty) UNION SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty < 75 ORDER BY ps_availqty) ORDER BY s_name
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_container FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_discount > 0.05 ORDER BY l_discount) UNION SELECT p_container FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_discount < 0.05 ORDER BY l_discount) ORDER BY p_container
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT n_comment FROM nation WHERE n_nationkey IN (SELECT s_nationkey FROM supplier WHERE s_acctbal > 2000 ORDER BY s_acctbal) UNION SELECT n_comment FROM nation WHERE n_nationkey IN (SELECT s_nationkey FROM supplier WHERE s_acctbal < 2000 ORDER BY s_acctbal) ORDER BY n_comment
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT o_clerk FROM orders WHERE o_orderkey IN (SELECT l_orderkey FROM lineitem WHERE l_extendedprice > 5000 ORDER BY l_extendedprice) UNION SELECT o_clerk FROM orders WHERE o_orderkey IN (SELECT l_orderkey FROM lineitem WHERE l_extendedprice < 5000 ORDER BY l_extendedprice) ORDER BY o_clerk
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT r_comment FROM region WHERE r_regionkey IN (SELECT n_regionkey FROM nation WHERE n_name LIKE 'E%' ORDER BY n_name) UNION SELECT r_comment FROM region WHERE r_regionkey IN (SELECT n_regionkey FROM nation WHERE n_name NOT LIKE 'E%' ORDER BY n_name) ORDER BY r_comment
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT p_size FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_tax > 0.03 ORDER BY l_tax) UNION SELECT p_size FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_tax < 0.03 ORDER BY l_tax) ORDER BY p_size
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT s_acctbal FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty > 60 ORDER BY ps_availqty) UNION SELECT s_acctbal FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty < 60 ORDER BY ps_availqty) ORDER BY s_acctbal
+['SORT_REMOVE', 'UNION_TO_DISTINCT']
+SELECT o_orderpriority FROM orders WHERE o_orderkey IN (SELECT l_orderkey FROM lineitem WHERE l_shipmode = 'AIR' ORDER BY l_shipdate) UNION SELECT o_orderpriority FROM orders WHERE o_orderkey IN (SELECT l_orderkey FROM lineitem WHERE l_shipmode = 'TRUCK' ORDER BY l_shipdate) ORDER BY o_orderpriority
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_orderkey) FROM (SELECT l_orderkey FROM lineitem WHERE l_shipdate > '1998-01-01' UNION ALL SELECT o_orderkey FROM orders WHERE o_orderdate < '1995-01-01') t JOIN customer ON c_custkey = t.l_orderkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM (SELECT o_orderkey FROM orders WHERE o_orderdate > '1997-01-01' UNION ALL SELECT l_orderkey FROM lineitem WHERE l_shipdate < '1996-01-01') t JOIN supplier ON s_suppkey = t.o_orderkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT p_partkey) FROM (SELECT p_partkey FROM part WHERE p_size > 10 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 50) t JOIN supplier ON s_suppkey = t.p_partkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT c_custkey) FROM (SELECT c_custkey FROM customer WHERE c_acctbal > 5000 UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice < 1000) t JOIN nation ON n_nationkey = t.c_custkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT s_suppkey) FROM (SELECT s_suppkey FROM supplier WHERE s_acctbal > 10000 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_availqty < 100) t JOIN nation ON n_nationkey = t.s_suppkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_custkey) FROM (SELECT o_custkey FROM orders WHERE o_totalprice > 2000 UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal < 3000) t JOIN nation ON n_nationkey = t.o_custkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_linenumber) FROM (SELECT l_linenumber FROM lineitem WHERE l_quantity > 20 UNION ALL SELECT o_shippriority FROM orders WHERE o_totalprice < 500) t JOIN part ON p_partkey = t.l_linenumber
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT s_suppkey) FROM (SELECT s_suppkey FROM supplier WHERE s_acctbal < 8000 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_availqty > 50) t JOIN customer ON c_custkey = t.s_suppkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT c_nationkey) FROM (SELECT c_nationkey FROM customer WHERE c_acctbal < 4000 UNION ALL SELECT s_nationkey FROM supplier WHERE s_acctbal > 7000) t JOIN region ON r_regionkey = t.c_nationkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT l_suppkey) FROM (SELECT l_suppkey FROM lineitem WHERE l_discount > 0.05 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 60) t JOIN part ON p_partkey = t.l_suppkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM (SELECT o_orderkey FROM orders WHERE o_totalprice > 3000 UNION ALL SELECT l_orderkey FROM lineitem WHERE l_quantity < 15) t JOIN customer ON c_custkey = t.o_orderkey
+['JOIN_LEFT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT c_custkey) FROM (SELECT c_custkey FROM customer WHERE c_acctbal < 3000 UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice > 5000) t JOIN nation ON n_nationkey = t.c_custkey
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT SUM(l_extendedprice) FROM (SELECT l_extendedprice, l_returnflag FROM lineitem WHERE l_shipdate < '1995-01-01' UNION ALL SELECT l_extendedprice, l_returnflag FROM lineitem WHERE l_shipdate >= '1995-01-01' GROUP BY l_extendedprice, l_returnflag) t JOIN (SELECT o_orderkey, o_orderstatus FROM orders) o ON t.l_extendedprice = o.o_orderkey GROUP BY o.o_orderstatus
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT AVG(l_quantity) FROM (SELECT l_quantity, l_linestatus FROM lineitem WHERE l_shipdate > '1995-03-01' UNION ALL SELECT l_quantity, l_linestatus FROM lineitem WHERE l_shipdate <= '1995-03-01' GROUP BY l_quantity, l_linestatus) t JOIN (SELECT o_orderkey, o_totalprice FROM orders) o ON t.l_quantity = o.o_orderkey GROUP BY o.o_totalprice
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT MIN(p_retailprice) FROM (SELECT p_retailprice, p_brand FROM part WHERE p_size > 15 UNION ALL SELECT p_retailprice, p_brand FROM part WHERE p_size <= 15 GROUP BY p_retailprice, p_brand) p JOIN (SELECT s_suppkey, s_name FROM supplier) s ON p.p_retailprice = s.s_suppkey GROUP BY s.s_name
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT AVG(p_retailprice) FROM (SELECT p_retailprice, p_type FROM part WHERE p_size < 20 UNION ALL SELECT p_retailprice, p_type FROM part WHERE p_size >= 20 GROUP BY p_retailprice, p_type) p JOIN (SELECT ps_partkey, ps_supplycost FROM partsupp) ps ON p.p_retailprice = ps.ps_partkey GROUP BY ps.ps_supplycost
+['AGGREGATE_UNION_AGGREGATE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT MAX(p_retailprice) FROM (SELECT p_retailprice, p_container FROM part WHERE p_size > 10 UNION ALL SELECT p_retailprice, p_container FROM part WHERE p_size <= 10 GROUP BY p_retailprice, p_container) p JOIN (SELECT ps_partkey, ps_supplycost FROM partsupp) ps ON p.p_retailprice = ps.ps_partkey GROUP BY ps.ps_supplycost
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT c_name FROM (SELECT c_name FROM customer UNION ALL SELECT n_name FROM nation) AS u JOIN orders ON u.c_name = o_orderstatus
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT s_name FROM (SELECT s_name FROM supplier UNION ALL SELECT p_name FROM part) AS u JOIN lineitem ON u.s_name = l_shipmode
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT o_clerk FROM (SELECT o_clerk FROM orders UNION ALL SELECT c_phone FROM customer) AS u JOIN lineitem ON u.o_clerk = l_shipinstruct
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT l_returnflag FROM (SELECT l_returnflag FROM lineitem UNION ALL SELECT o_orderstatus FROM orders) AS u JOIN customer ON u.l_returnflag = c_phone
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT s_acctbal FROM (SELECT s_acctbal FROM supplier UNION ALL SELECT c_acctbal FROM customer) AS u JOIN orders ON u.s_acctbal = o_shippriority
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT p_retailprice FROM (SELECT p_retailprice FROM part UNION ALL SELECT c_acctbal FROM customer) AS u JOIN lineitem ON u.p_retailprice = l_tax
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT l_linestatus FROM (SELECT l_linestatus FROM lineitem UNION ALL SELECT o_orderpriority FROM orders) AS u JOIN supplier ON u.l_linestatus = s_phone
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT c_comment FROM (SELECT c_comment FROM customer UNION ALL SELECT p_comment FROM part) AS u JOIN orders ON u.c_comment = o_clerk
+['AGGREGATE_REMOVE', 'JOIN_LEFT_UNION_TRANSPOSE']
+SELECT DISTINCT l_extendedprice FROM (SELECT l_extendedprice FROM lineitem UNION ALL SELECT o_totalprice FROM orders) AS u JOIN partsupp ON u.l_extendedprice = ps_supplycost
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost > 50 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_availqty < 100) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'BUILDING' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal < 500) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'FURNITURE' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal < 800) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 30 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_availqty > 200) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'MACHINERY' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 1500) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT c_custkey FROM customer WHERE c_mktsegment = 'HOUSEHOLD' UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 2000) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT o_custkey) FROM orders JOIN (SELECT c_custkey FROM customer UNION ALL SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem JOIN (SELECT o_orderkey FROM orders UNION ALL SELECT o_orderkey FROM orders WHERE o_totalprice > 5000) AS order_union ON lineitem.l_orderkey = order_union.o_orderkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT ps_partkey) FROM partsupp JOIN (SELECT p_partkey FROM part UNION ALL SELECT p_partkey FROM part WHERE p_retailprice > 50) AS part_union ON partsupp.ps_partkey = part_union.p_partkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT p_size) FROM part JOIN (SELECT ps_partkey FROM partsupp UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 10) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT o_orderpriority) FROM orders JOIN (SELECT c_custkey FROM customer UNION ALL SELECT c_custkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE') AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT p_type) FROM part JOIN (SELECT ps_partkey FROM partsupp UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_availqty > 100) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT l_linenumber) FROM lineitem JOIN (SELECT o_orderkey FROM orders UNION ALL SELECT o_orderkey FROM orders WHERE o_orderdate > '1995-01-01') AS order_union ON lineitem.l_orderkey = order_union.o_orderkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT p_container) FROM part JOIN (SELECT ps_partkey FROM partsupp UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost > 20) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT l_returnflag) FROM lineitem JOIN (SELECT o_orderkey FROM orders UNION ALL SELECT o_orderkey FROM orders WHERE o_orderstatus = 'F') AS order_union ON lineitem.l_orderkey = order_union.o_orderkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT o_clerk) FROM orders JOIN (SELECT c_custkey FROM customer UNION ALL SELECT c_custkey FROM customer WHERE c_address LIKE '%Main%') AS cust_union ON orders.o_custkey = cust_union.c_custkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT l_shipmode) FROM lineitem JOIN (SELECT o_orderkey FROM orders UNION ALL SELECT o_orderkey FROM orders WHERE o_shippriority = 1) AS order_union ON lineitem.l_orderkey = order_union.o_orderkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT p_brand) FROM part JOIN (SELECT ps_partkey FROM partsupp UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_availqty < 50) AS partsupp_union ON part.p_partkey = partsupp_union.ps_partkey
+['AGGREGATE_EXPAND_DISTINCT_AGGREGATES', 'JOIN_RIGHT_UNION_TRANSPOSE']
+SELECT COUNT(DISTINCT l_discount) FROM lineitem JOIN (SELECT o_orderkey FROM orders UNION ALL SELECT o_orderkey FROM orders WHERE o_totalprice < 3000) AS order_union ON lineitem.l_orderkey = order_union.o_orderkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT l_orderkey FROM lineitem WHERE l_quantity > 10 UNION ALL SELECT l_orderkey FROM lineitem WHERE l_discount < 0.05) AS subq ON orders.o_orderkey = subq.l_orderkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT c_custkey) FROM customer JOIN (SELECT o_custkey FROM orders WHERE o_totalprice > 1000 UNION ALL SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01') AS subq ON customer.c_custkey = subq.o_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT s_suppkey) FROM supplier JOIN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty > 50 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 10) AS subq ON supplier.s_suppkey = subq.ps_suppkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_availqty > 100 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost > 20) AS subq ON part.p_partkey = subq.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT n_nationkey) FROM nation JOIN (SELECT c_nationkey FROM customer WHERE c_acctbal > 5000 UNION ALL SELECT c_nationkey FROM customer WHERE c_mktsegment = 'AUTOMOBILE') AS subq ON nation.n_nationkey = subq.c_nationkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_availqty < 50 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost > 30) AS subq ON part.p_partkey = subq.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT s_suppkey) FROM supplier JOIN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty < 30 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 15) AS subq ON supplier.s_suppkey = subq.ps_suppkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT o_orderkey) FROM orders JOIN (SELECT l_orderkey FROM lineitem WHERE l_quantity < 5 UNION ALL SELECT l_orderkey FROM lineitem WHERE l_discount > 0.10) AS subq ON orders.o_orderkey = subq.l_orderkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT c_custkey) FROM customer JOIN (SELECT o_custkey FROM orders WHERE o_totalprice < 500 UNION ALL SELECT o_custkey FROM orders WHERE o_orderdate < '1994-01-01') AS subq ON customer.c_custkey = subq.o_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT n_nationkey) FROM nation JOIN (SELECT s_nationkey FROM supplier WHERE s_acctbal < 2000 UNION ALL SELECT s_nationkey FROM supplier WHERE s_comment LIKE '%reliable%') AS subq ON nation.n_nationkey = subq.s_nationkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_availqty > 75 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 15) AS subq ON part.p_partkey = subq.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT l_linenumber) FROM lineitem JOIN (SELECT o_orderkey FROM orders WHERE o_totalprice < 800 UNION ALL SELECT o_orderkey FROM orders WHERE o_orderdate < '1996-01-01') AS subq ON lineitem.l_orderkey = subq.o_orderkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT s_suppkey) FROM supplier JOIN (SELECT ps_suppkey FROM partsupp WHERE ps_availqty > 60 UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 8) AS subq ON supplier.s_suppkey = subq.ps_suppkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT c_custkey) FROM customer JOIN (SELECT o_custkey FROM orders WHERE o_totalprice > 1500 UNION ALL SELECT o_custkey FROM orders WHERE o_orderdate > '1996-01-01') AS subq ON customer.c_custkey = subq.o_custkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT p_partkey) FROM part JOIN (SELECT ps_partkey FROM partsupp WHERE ps_availqty > 150 UNION ALL SELECT ps_partkey FROM partsupp WHERE ps_supplycost < 8) AS subq ON part.p_partkey = subq.ps_partkey
+['JOIN_RIGHT_UNION_TRANSPOSE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT n_nationkey) FROM nation JOIN (SELECT s_nationkey FROM supplier WHERE s_acctbal > 3000 UNION ALL SELECT s_nationkey FROM supplier WHERE s_comment LIKE '%excellent%') AS subq ON nation.n_nationkey = subq.s_nationkey
+['SEMI_JOIN_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT l_orderkey) FROM lineitem WHERE l_partkey IN (SELECT p_partkey FROM part WHERE p_type LIKE 'MEDIUM%') AND l_suppkey IN (SELECT s_suppkey FROM supplier WHERE s_acctbal > 5000) AND l_quantity > 20
+['SEMI_JOIN_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT s_suppkey) FROM supplier WHERE s_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 3) AND s_acctbal < 3000 AND s_phone LIKE '27%'
+['SEMI_JOIN_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT s_suppkey) FROM supplier WHERE s_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 1) AND s_acctbal > 4000 AND s_phone LIKE '18%'
+['SEMI_JOIN_REMOVE', 'AGGREGATE_EXPAND_DISTINCT_AGGREGATES_TO_JOIN']
+SELECT COUNT(DISTINCT l_suppkey) FROM lineitem WHERE l_partkey IN (SELECT p_partkey FROM part WHERE p_type LIKE 'SMALL%') AND l_quantity < 15 AND l_shipdate > DATE '1995-09-01'
+['SEMI_JOIN_REMOVE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer WHERE c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 1) UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice > 1000) t
+['SEMI_JOIN_REMOVE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT s_suppkey FROM supplier WHERE s_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 4) UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 500) t
+['SEMI_JOIN_REMOVE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT c_custkey FROM customer WHERE c_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 2) UNION ALL SELECT o_custkey FROM orders WHERE o_totalprice > 1500) t
+['SEMI_JOIN_REMOVE', 'AGGREGATE_UNION_TRANSPOSE']
+SELECT COUNT(*) FROM (SELECT s_suppkey FROM supplier WHERE s_nationkey IN (SELECT n_nationkey FROM nation WHERE n_regionkey = 3) UNION ALL SELECT ps_suppkey FROM partsupp WHERE ps_supplycost < 300) t
+['JOIN_EXTRACT_FILTER', 'UNION_MERGE']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 10 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 20 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_quantity > 30)
+['JOIN_EXTRACT_FILTER', 'UNION_MERGE']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal < 2000 UNION SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal > 5000 UNION SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal < 1000)
+['JOIN_EXTRACT_FILTER', 'UNION_MERGE']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal > 3000 UNION SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal < 1000 UNION SELECT ps_partkey FROM partsupp JOIN supplier ON ps_suppkey = s_suppkey WHERE s_acctbal > 5000)
+['JOIN_EXTRACT_FILTER', 'UNION_MERGE']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_discount > 0.05 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_discount < 0.10 UNION SELECT o_custkey FROM orders JOIN lineitem ON o_orderkey = l_orderkey WHERE l_discount > 0.15)
+['JOIN_EXTRACT_FILTER', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_orderpriority = '1-URGENT')
+['JOIN_EXTRACT_FILTER', 'UNION_TO_DISTINCT']
+SELECT c_address FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate < '1995-01-01' UNION SELECT o_custkey FROM orders WHERE o_orderpriority = '2-HIGH')
+['JOIN_EXTRACT_FILTER', 'UNION_TO_DISTINCT']
+SELECT c_comment FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1996-01-01' UNION SELECT o_custkey FROM orders WHERE o_orderpriority = '4-NOT SPECIFIED')
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT c_name FROM customer WHERE c_custkey IN (SELECT o_custkey FROM orders WHERE o_orderdate > '1995-01-01' UNION SELECT c_custkey FROM customer WHERE c_acctbal > 1000) AND c_nationkey IN (SELECT n_nationkey FROM nation JOIN region ON n_regionkey = r_regionkey WHERE r_name = 'ASIA')
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_shipdate > '1995-06-30' UNION SELECT p_partkey FROM part WHERE p_retailprice < 150) AND p_size IN (SELECT p_size FROM part JOIN partsupp ON p_partkey = ps_partkey WHERE ps_availqty < 50)
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_orderkey FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 1000 UNION SELECT o_custkey FROM orders WHERE o_orderdate > '1996-01-01') AND o_orderstatus IN (SELECT o_orderstatus FROM orders JOIN customer ON o_custkey = c_custkey WHERE c_mktsegment = 'BUILDING')
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT s_name FROM supplier WHERE s_suppkey IN (SELECT ps_suppkey FROM partsupp WHERE ps_supplycost > 70 UNION SELECT s_suppkey FROM supplier WHERE s_acctbal > 4000) AND s_nationkey IN (SELECT n_nationkey FROM nation JOIN region ON n_regionkey = r_regionkey WHERE r_name = 'ASIA')
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT p_name FROM part WHERE p_partkey IN (SELECT l_partkey FROM lineitem WHERE l_shipdate > '1997-06-30' UNION SELECT p_partkey FROM part WHERE p_retailprice > 250) AND p_size IN (SELECT p_size FROM part JOIN partsupp ON p_partkey = ps_partkey WHERE ps_availqty > 150)
+['JOIN_PROJECT_BOTH_TRANSPOSE', 'UNION_TO_DISTINCT']
+SELECT o_clerk FROM orders WHERE o_custkey IN (SELECT c_custkey FROM customer WHERE c_acctbal > 2000 UNION SELECT o_custkey FROM orders WHERE o_orderdate < '1993-06-30') AND o_shippriority IN (SELECT o_shippriority FROM orders JOIN customer ON o_custkey = c_custkey WHERE c_mktsegment = 'HOUSEHOLD')

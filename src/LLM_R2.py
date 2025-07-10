@@ -15,6 +15,7 @@ from get_query_meta import *
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 import sys
+import torch
 
 # Set PATHs
 PATH_TO_SENTEVAL = './SentEval'
@@ -29,29 +30,32 @@ from openai import OpenAI
 # import tiktoken
 client = OpenAI(
     # This is the default and can be omitted
-    api_key=os.environ.get("ARK_API_KEY"),
-    base_url="https://ark.cn-beijing.volces.com/api/v3",
+    api_key="sk-9361e8ee8fd44a129615f6a2dc718784",
+    base_url="https://api.deepseek.com",
 )
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# model = QueryformerForCL()
-# model_name = 'tpch'
-# checkpoint = torch.load('simcse_models/' + model_name + '/pytorch_model.bin', map_location=torch.device('cpu'))
-# model.load_state_dict(checkpoint, strict=False)
+model = QueryformerForCL()
+model_name = 'tpch'
+checkpoint = torch.load('simcse_models/' + model_name + '/pytorch_model.bin', map_location=torch.device('cpu'))
+model.load_state_dict(checkpoint, strict=False)
 # print("ok!")
-# model.eval()
+model.eval()
 # print("ok!")
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # print("ok!")
-# model = model.to(device)
+model = model.to(device)
 # print("ok!")
 
 def batcher(sentences, db_ids):
     # sentences = [[' '.join(s).replace('"', '')] for s in batch]
     # db_ids = ['tpch'] * len(sentences)
+    print(sentences, db_ids)
     sent_features = prepare_enc_data(sentences, pre_lang_model, db_ids)
     batch = eval_collator(sent_features)
+    if len(batch) == 0:
+        return []
     with torch.no_grad():
         outputs = model(**batch, eval=True)
         # pooler_output = outputs.hidden_states
@@ -79,7 +83,7 @@ def query_gpt_attempts(prompt, trys):
 def query_turbo_model(prompt):
     # print(prompt)
     chat_completion = client.chat.completions.create(
-        model="ep-20250208072708-5r255",
+        model="deepseek-chat",
         messages=prompt,
         temperature=0,
     )
@@ -464,6 +468,8 @@ def get_k_promos(k, pos_pool, neg_pool, db_id, query, logical_plan, method='plan
         query_pool_all = [x for x in query_pool_all if x != query]
         batch1 = [[query]]
         enc1 = batcher(batch1, [db_id])
+        if len(enc1) == 0:
+            return []
         enc1 = enc1.repeat((enc2.shape[0], 1))
         sim_scores = []
         for kk in range(enc2.shape[0]):
@@ -587,6 +593,8 @@ def LLM_R2(dataset, method, num_promos):
                 logical_plan = get_logical_plan(db_id, edit_queries(query))
                 demo_time_start = time.time()
                 sim_promos = get_k_promos(num_promos, promo_pool_pos, promo_pool_neg, db_id, query, logical_plan, method=method)
+                # if len(sim_promos) == 0:
+                #     continue
                 demo_time_end = time.time()
                 demo_time = demo_time_end - demo_time_start
                 demo_time_record.append(demo_time)
@@ -609,6 +617,8 @@ def LLM_R2(dataset, method, num_promos):
 
                 rewriter_time_start = time.time()
                 rewrite_query_s = call_rewriter(db_id, query, gpt_rules_s)
+                print("Rewrite results")
+                print(rewrite_query_s)
                 rewriter_time_end = time.time()
                 rewriter_time = rewriter_time_end - rewriter_time_start
                 rewriter_time_record.append(rewriter_time)
@@ -659,7 +669,6 @@ def LLM_R2(dataset, method, num_promos):
                 prompt_rules_s.append(promo_rules)
 
                 print(query)
-                # print(rewrite_query)
                 print(gpt_rules_s)
 
             if index % 500 == 0 and index > 0:
@@ -700,13 +709,9 @@ def LLM_R2(dataset, method, num_promos):
 # method = 'plan'
 # promo_pool_pos = get_pool('pos_pool_job_syn.csv', method)
 # promo_pool_neg = get_pool('neg_pool_job_syn.csv', method)
-method = 'random'
-dataset = 'dsb'
+method = 'queryCL'
+dataset = 'bird'
 num_promos = 1
-# LLM_R2(dataset, method, num_promos)
+print("running LLM_R2")
+LLM_R2(dataset, method, num_promos)
 
-print(agge_rewrite_rules)
-print(filt_rewrite_rules)
-print(join_rewrite_rules)
-print(sort_rewrite_rules)
-print(union_rewrite_rules)

@@ -18,7 +18,7 @@ class GenerateMethod(ABC):
             api_key=os.environ.get("ARK_API_KEY"),
             base_url="https://ark.cn-beijing.volces.com/api/v3",
         )
-        os.environ["TOKENIZERS_PARALLELISM"] = "false"
+        os.environ["TOKENIZERS_PARALLELISM"] = ""
         self.pre_lang_model = SentenceTransformer('all-MiniLM-L6-v2')
 
     @abstractmethod

@@ -69,7 +69,11 @@ def extractNode(node):
 
 
 def traversePlan(root, level=0):
+    print("root is:")
+    print(root)
     if isinstance(root, list):
+        if len(root) == 0:
+            return []
         root_dict = root[0]
         root_node = TreeNode(extractNode(root_dict))
         root_node.level = level
@@ -297,6 +301,8 @@ def eval_collator(node_feature_set):
     attn_bias_row = []
     rel_pos_row = []
     heights_row = []
+    if len(node_feature_set[0]) == 0:
+        return []
     for row in node_feature_set:
         x_row.append(torch.cat([s['x'] for s in row]))
         attn_bias_row.append(torch.cat([s['attn_bias'] for s in row]))
@@ -316,7 +322,14 @@ def prepare_enc_data(query_dataset, model, db_ids):
     processed_dataset = []
     for i in range(len(query_dataset)):
         db_id = db_ids[i]
-        nodes = [traversePlan(get_physical_tree(db_id, sql_input)) for sql_input in query_dataset[i]]
+        nodes = []
+        for sql_input in query_dataset[i]:
+            tmp = traversePlan(get_physical_tree(db_id, sql_input))
+            if isinstance(tmp, list):
+                if len(tmp) == 0:
+                    continue
+            nodes.append(tmp)
+       #  nodes = [traversePlan(get_physical_tree(db_id, sql_input)) for sql_input in query_dataset[i]]
         processed_dataset.append([QueryFormerPreprocess(node, model).__getitem__() for node in nodes])
     return processed_dataset
 
